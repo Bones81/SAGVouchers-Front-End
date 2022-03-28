@@ -3,6 +3,78 @@
   <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" />
 
   <input type="submit" (click)="calculate()" value="Calculate pay"/>
-  
+
 </form>
 <h3 *ngIf="totalPay > 0">${{totalPay}}</h3>
+<table>
+  <thead>
+    <th>
+      variable
+    </th>
+    <th>
+      value
+    </th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>hrsWorked</td>
+      <td>{{hrsWorked}}</td>
+    </tr>
+    <tr>
+      <td>overtimeHrs</td>
+      <td>{{overtimeHrs}}</td>
+    </tr>
+    <tr>
+      <td>baseRate</td>
+      <td>{{baseRate}}</td>
+    </tr>
+    <tr>
+      <td>overtimeRate1</td>
+      <td>{{overtimeRate1}}</td>
+    </tr>
+    <tr>
+      <td>overtimeRate2</td>
+      <td>{{overtimeRate2}}</td>
+    </tr>
+    <tr>
+      <td>goldenRate</td>
+      <td>{{goldenRate}}</td>
+    </tr>
+    <tr>
+      <td>basePay</td>
+      <td>{{basePay}}</td>
+    </tr>
+    <tr>
+      <td>overtimePay</td>
+      <td>{{overtimePay}}</td>
+    </tr>
+    <tr>
+      <td>totalPay</td>
+      <td>{{totalPay}}</td>
+    </tr>
+    <tr>
+      <td>startTime</td>
+      <td>{{startTime}}</td>
+    </tr>
+    <tr>
+      <td>endTime</td>
+      <td>{{endTime}}</td>
+    </tr>
+    <tr>
+      <td>lunchBreakStart</td>
+      <td>{{lunchBreakStart}}</td>
+    </tr>
+    <tr>
+      <td>lunchBreakEnd</td>
+      <td>{{lunchBreakEnd}}</td>
+    </tr>
+    <tr>
+      <td>dinnerBreakStart</td>
+      <td>{{dinnerBreakStart}}</td>
+    </tr>
+    <tr>
+      <td>dinnerBreakEnd</td>
+      <td>{{dinnerBreakEnd}}</td>
+    </tr>
+  </tbody>
+</table>
