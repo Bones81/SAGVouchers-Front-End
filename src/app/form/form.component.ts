@@ -37,6 +37,7 @@ export class FormComponent implements OnInit {
     if (this.hrsWorked < 8 && this.hrsWorked > 0) { // worked 8 hrs or less, earns 8hrs pay and no overtime
       this.hrsWorked = 8
       this.basePay = this.hrsWorked * this.baseRate
+      this.overtimeHrs = 0
       this.overtimePay = 0
     } else if (this.hrsWorked > 8) { // worked more than 8 hrs
       this.overtimeHrs = this.hrsWorked - 8 // calculate OT hrs
