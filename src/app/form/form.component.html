@@ -1,0 +1,8 @@
+<form>
+  <label for="hrsWorked">Total Hours Worked: </label>
+  <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" />
+
+  <input type="submit" (click)="calculate()" value="Calculate pay"/>
+  
+</form>
+<h3 *ngIf="totalPay > 0">${{totalPay}}</h3>
