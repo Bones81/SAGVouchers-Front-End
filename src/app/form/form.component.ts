@@ -74,7 +74,13 @@ export class FormComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.bgTypes = [
+      'general background',
+      'special ability',
+      'stand-in or photo double'
+    ]
+   }
 
   logBgType(): void {
     console.log(this.bgType);
@@ -136,6 +142,11 @@ export class FormComponent implements OnInit {
         this.overtimePay = 2 * this.overtimeRate1 + (this.overtimeHrs - 2) * this.overtimeRate2 // OT pay calulation
       }
     } else if (this.hrsWorked <= 0) {
+      this.totalWages = 0
+      this.basePay = 0
+      this.overtimePay = 0
+      this.totalWages = this.basePay + this.overtimePay
+
       console.log('Please enter a number of hours greater than 0')
     }
     

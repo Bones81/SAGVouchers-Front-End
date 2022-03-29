@@ -1,9 +1,7 @@
 <form>
   <label for="bgType">Work Category: </label>
-  <select name="bgType" id="bgType" [(ngModel)]="bgType">
-    <option selected value="general background">General Background</option>
-    <option value="special ability">Special Ability</option>
-    <option value="stand-in or photo double">Stand-In / Photo Double</option>
+  <select name="bgType" id="bgType" [(ngModel)]="bgType" (ngModelChange)="calculate()">
+    <option *ngFor="let bgType of bgTypes" [ngValue]="bgType">{{bgType}}</option>
   </select><br/>
   <label for="hrsWorked">Total Hours Worked: </label>
   <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" />
