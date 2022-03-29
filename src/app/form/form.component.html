@@ -1,11 +1,17 @@
 <form>
+  <label for="bgType">Work Category: </label>
+  <select name="bgType" id="bgType" [(ngModel)]="bgType" >
+    <option value="general background">General Background</option>
+    <option value="special ability">Special Ability</option>
+    <option value="stand-in or photo double">Stand-In / Photo Double</option>
+  </select><br/>
   <label for="hrsWorked">Total Hours Worked: </label>
   <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" />
 
   <input type="submit" (click)="calculate()" value="Calculate pay"/>
 
 </form>
-<h3 *ngIf="totalPay > 0">${{totalPay}}</h3>
+<h3 *ngIf="totalPay > 0">Total Earned: ${{totalPay | number : '1.2-2'}}</h3>
 <table>
   <thead>
     <th>
@@ -17,64 +23,80 @@
   </thead>
   <tbody>
     <tr>
-      <td>hrsWorked</td>
-      <td>{{hrsWorked}}</td>
+      <td>Work Category</td>
+      <td>{{bgType}}</td>
     </tr>
     <tr>
-      <td>overtimeHrs</td>
-      <td>{{overtimeHrs}}</td>
-    </tr>
-    <tr>
-      <td>baseRate</td>
-      <td>{{baseRate}}</td>
-    </tr>
-    <tr>
-      <td>overtimeRate1</td>
-      <td>{{overtimeRate1}}</td>
-    </tr>
-    <tr>
-      <td>overtimeRate2</td>
-      <td>{{overtimeRate2}}</td>
-    </tr>
-    <tr>
-      <td>goldenRate</td>
-      <td>{{goldenRate}}</td>
-    </tr>
-    <tr>
-      <td>basePay</td>
-      <td>{{basePay}}</td>
-    </tr>
-    <tr>
-      <td>overtimePay</td>
-      <td>{{overtimePay}}</td>
-    </tr>
-    <tr>
-      <td>totalPay</td>
-      <td>{{totalPay}}</td>
-    </tr>
-    <tr>
-      <td>startTime</td>
+      <td>Clock-in time</td>
       <td>{{startTime}}</td>
     </tr>
     <tr>
-      <td>endTime</td>
+      <td>Clock-out time</td>
       <td>{{endTime}}</td>
     </tr>
     <tr>
-      <td>lunchBreakStart</td>
-      <td>{{lunchBreakStart}}</td>
+      <td>Lunch start time</td>
+      <td>{{lunchStart}}</td>
     </tr>
     <tr>
-      <td>lunchBreakEnd</td>
-      <td>{{lunchBreakEnd}}</td>
+      <td>Lunch end time</td>
+      <td>{{lunchEnd}}</td>
     </tr>
     <tr>
-      <td>dinnerBreakStart</td>
-      <td>{{dinnerBreakStart}}</td>
+      <td>Lunch penalties</td>
+      <td>{{lunchPenalties}}</td>
     </tr>
     <tr>
-      <td>dinnerBreakEnd</td>
-      <td>{{dinnerBreakEnd}}</td>
+      <td>Dinner start time</td>
+      <td>{{dinnerStart}}</td>
+    </tr>
+    <tr>
+      <td>Dinner end time</td>
+      <td>{{dinnerEnd}}</td>
+    </tr>
+    <tr>
+      <td>Dinner penalties</td>
+      <td>{{dinnerPenalties}}</td>
+    </tr>
+    <tr>
+      <td>total # of hours worked</td>
+      <td>{{hrsWorked | number: '1.1-1'}}</td>
+    </tr>
+    <tr>
+      <td># of overtime hours</td>
+      <td>{{overtimeHrs | number: '1.1-1'}}</td>
+    </tr>
+    <tr>
+      <td>Base rate</td>
+      <td>${{baseRate | number: '1.2-2'}}/hr</td>
+    </tr>
+    <tr>
+      <td>First 2 hours of overtime (between work hours 9 and 10)</td>
+      <td>${{overtimeRate1 | number: '1.2-2'}}/hr</td>
+    </tr>
+    <tr>
+      <td>Overtime rate after the 10th work hour</td>
+      <td>${{overtimeRate2 | number: '1.2-2'}}/hr</td>
+    </tr>
+    <tr>
+      <td>"Golden time" bonus (triggers 16 hrs after start time)</td>
+      <td>${{goldenRate | number: '1.2-2'}}/hr </td>
+    </tr>
+    <tr>
+      <td>Base pay (8 hrs at base rate)</td>
+      <td>${{basePay | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td>Total overtime pay</td>
+      <td>${{overtimePay | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td>Total pay (Base Pay + OT pay) </td>
+      <td>${{totalPay | number: '1.2-2'}}</td>
     </tr>
   </tbody>
 </table>
+<h3>To do</h3>
+<p>
+  Bumps, Meal penalties, Night premium adjustments
+</p>
