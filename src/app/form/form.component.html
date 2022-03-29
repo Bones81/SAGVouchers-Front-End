@@ -1,7 +1,7 @@
 <form>
   <label for="bgType">Work Category: </label>
-  <select name="bgType" id="bgType" [(ngModel)]="bgType" >
-    <option value="general background">General Background</option>
+  <select name="bgType" id="bgType" [(ngModel)]="bgType">
+    <option selected value="general background">General Background</option>
     <option value="special ability">Special Ability</option>
     <option value="stand-in or photo double">Stand-In / Photo Double</option>
   </select><br/>
@@ -91,7 +91,19 @@
       <td>${{overtimePay | number: '1.2-2'}}</td>
     </tr>
     <tr>
-      <td>Total pay (Base Pay + OT pay) </td>
+      <td>Total wages (Base rate adjustments + base pay + OT pay + night premiums)</td>
+      <td>${{totalWages | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td>Total bumps</td>
+      <td>${{totalBumps | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td>Total meal penalties</td>
+      <td>${{totalPenalties | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td>Total pay (Total wages + bumps/penalties) </td>
       <td>${{totalPay | number: '1.2-2'}}</td>
     </tr>
   </tbody>
