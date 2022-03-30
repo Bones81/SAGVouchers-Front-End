@@ -13,6 +13,10 @@ export class FormComponent implements OnInit {
   endTime: any = '' // should be date/time
   endTimeNum: number = 0 // numerical representation of endTime
   totalHrs: number = 0 // total hrs between call time and out time
+  ndbStart: string = '' // start time of Non-Deductible Breakfast
+  ndbStartNum: number = 0 // numerical representation of ndbStart
+  ndbEnd: string = '' // end time of Non-Deductible Breakfast
+  ndbEndNum: number = 0 // numerical representation of ndbEnd
   ot1Trigger: boolean = false // true when OT 1 triggers
   ot2Trigger: boolean = false // true when OT 2 triggers
   goldenTrigger: boolean = false // true when golden time triggers
@@ -99,7 +103,10 @@ export class FormComponent implements OnInit {
       this.baseRate = 192 / 8
     } else if (this.bgType === 'stand-in or photo double') {
       this.baseRate = 214 / 8
+    } else {
+      this.baseRate = 0
     }
+
     if (this.wetPay) {
       this.baseRate += (14 / 8)
     }
@@ -165,10 +172,20 @@ export class FormComponent implements OnInit {
 
   }
 
+  calcBumps(): void {
+    this.totalBumps = 0
+    if (this.numWardrobe > 0) {
+      let wardrobePay = (this.numWardrobe - 1) * 6.25 + 9
+      this.totalBumps += wardrobePay
+    }
+    this.formalWear ? this.totalBumps += 18 : null
+    this.policeWear ? this.totalBumps += 36 : null
+  }
 
   calculate(): void {
     this.calcHrs()
     this.calcRates()
+    this.calcBumps()
     // console.log(`base rate: ${this.baseRate}\not1 rate: ${this.overtimeRate1}\not2 rate: ${this.overtimeRate2}`)
 
     if (this.hrsWorked <= 8 && this.hrsWorked > 0) { // worked 8 hrs or less, earns 8hrs pay and no overtime
