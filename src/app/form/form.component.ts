@@ -117,7 +117,7 @@ export class FormComponent implements OnInit {
     this.overtimeRate1 = 1.5 * this.baseRate // set OT1 rate
     this.overtimeRate2 = 2 * this.baseRate // set OT2 rate
     this.goldenRate = 8 * this.baseRate // set golden bonus
-    this.baseN1 = .1 * this.baseRate
+    this.baseN1 = .1 * this.baseRate // set night premiums
     this.baseN2 = .2 * this.baseRate
     this.ot1N1 = .1 * this.overtimeRate1
     this.ot1N2 = .2 * this.overtimeRate1
@@ -141,7 +141,7 @@ export class FormComponent implements OnInit {
       if (dinnerTime > 0 && (dinnerTime > 1 || dinnerTime < 0.5)) {
         console.log('Meal breaks must be either one-half hour or one hour long.');
       }
-      console.log(lunchTime, dinnerTime)
+      // console.log(lunchTime, dinnerTime)
       this.totalHrs = this.endTimeNum - this.startTimeNum
       if (this.totalHrs < 0) {
         this.totalHrs += 24
