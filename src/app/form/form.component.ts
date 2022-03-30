@@ -69,6 +69,7 @@ export class FormComponent implements OnInit {
   luggage2: boolean = false
   camera: boolean = false
   skisPoles: boolean = false
+  otherPropsAmt: number = 0 // negotiated amount for any addtl props
 
   car: boolean = false
   trailer: boolean = false
@@ -135,6 +136,8 @@ export class FormComponent implements OnInit {
   calcHrs(): void {
     this.startTimeNum = this.convertTextTimeToNumber(this.startTime)
     this.endTimeNum = this.convertTextTimeToNumber(this.endTime)
+    this.ndbStartNum = this.convertTextTimeToNumber(this.ndbStart)
+    this.ndbEndNum = this.convertTextTimeToNumber(this.ndbEnd)
     this.lunchStartNum = this.convertTextTimeToNumber(this.lunchStart)
     this.lunchEndNum = this.convertTextTimeToNumber(this.lunchEnd)
     this.dinnerStartNum = this.convertTextTimeToNumber(this.dinnerStart)
@@ -180,6 +183,24 @@ export class FormComponent implements OnInit {
     }
     this.formalWear ? this.totalBumps += 18 : null
     this.policeWear ? this.totalBumps += 36 : null
+    this.pet ? this.totalBumps += 23 : null
+    this.golfClubs ? this.totalBumps += 12 : null
+    this.tennisRacquet ? this.totalBumps += 5.50 : null
+    this.luggage1 ? this.totalBumps += 5.50 : null
+    this.luggage2 ? this.totalBumps += 5.50 : null
+    this.camera ? this.totalBumps += 5.50 : null
+    this.skisPoles ? this.totalBumps += 12 : null
+    this.otherPropsAmt ? this.totalBumps += this.otherPropsAmt : null
+
+    this.car ? this.totalBumps += 37.50 : null
+    this.trailer ? this.totalBumps += 19 : null
+    this.bicycle ? this.totalBumps += 12 : null
+    this.moped ? this.totalBumps += 15 : null
+    this.motorcycle ? this.totalBumps += 37.50 : null
+    this.policeMoto ? this.totalBumps += 50 : null
+    this.skatesOrSkateboard ? this.totalBumps += 5.50 : null
+    this.mileage ? this.totalBumps += 0.3 * this.mileage : null
+    this.tolls ? this.totalBumps += this.tolls : null
   }
 
   calculate(): void {
