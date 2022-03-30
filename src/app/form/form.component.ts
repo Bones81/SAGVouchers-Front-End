@@ -158,9 +158,12 @@ export class FormComponent implements OnInit {
     // console.log(this.ndbEndNum)
     console.log('lunchExpectedStart = ' + lunchExpectedStart)
     console.log('lunchStartNum = ' + this.lunchStartNum)
+    if (lunchExpectedStart >= 24) {
+      lunchExpectedStart -= 24
+    }
     // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
-    if ((lunchExpectedStart && this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
-        (lunchExpectedStart && !this.lunchStartNum && this.endTimeNum > lunchExpectedStart)) {
+    if ((this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
+        (!this.lunchStartNum && this.endTimeNum > lunchExpectedStart)) {
       let lunchDelay
       if (this.lunchStartNum) {
         lunchDelay = this.lunchStartNum - lunchExpectedStart

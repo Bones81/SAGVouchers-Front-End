@@ -7,11 +7,11 @@
         <option *ngFor="let bgType of bgTypes" [ngValue]="bgType">{{bgType}}</option>
       </select><br/>
   
-      <label for="wetPay">Wet work? </label>
+      <label for="wetPay">Wet work (+$14 to daily rate) </label>
       <input type="checkbox" name="wetPay" id="wetPay" [(ngModel)]="wetPay" (ngModelChange)="calculate()"/><br/>
-      <label for="smokePay">Smoke work? </label>
+      <label for="smokePay">Smoke work (+$14 to daily rate) </label>
       <input type="checkbox" name="smokePay" id="smokePay" [(ngModel)]="smokePay" (ngModelChange)="calculate()"/><br/>
-      <label for="hmu">Full beard or body makeup? </label>
+      <label for="hmu">Full beard or body makeup (+$19 to daily rate) </label>
       <input type="checkbox" name="hmu" id="hmu" [(ngModel)]="hmu" (ngModelChange)="calculate()"/><br/>
   
       <h3>Start and End times</h3>
@@ -52,10 +52,12 @@
       <input type="checkbox" name="golfClubs" id="golfClubs" [(ngModel)]="golfClubs" (ngModelChange)="calculate()"/><br/>
       <label for="tennisRacquet">Tennis racquet</label>
       <input type="checkbox" name="tennisRacquet" id="tennisRacquet" [(ngModel)]="tennisRacquet" (ngModelChange)="calculate()"/><br/>
-      <label for="luggage1">Luggage (one piece)</label>
+      <label for="luggage1">Luggage (first piece)</label>
       <input type="checkbox" name="luggage1" id="luggage1" [(ngModel)]="luggage1" (ngModelChange)="calculate()"/><br/>
-      <label for="luggage2">Luggage (second piece)</label>
-      <input type="checkbox" name="luggage2" id="luggage2" [(ngModel)]="luggage2" (ngModelChange)="calculate()"/><br/>
+      <div *ngIf="luggage1" >
+        <label for="luggage2">Luggage (second piece)</label>
+        <input type="checkbox" name="luggage2" id="luggage2" [(ngModel)]="luggage2" (ngModelChange)="calculate()"/><br/>
+      </div>
       <label for="camera">Camera</label>
       <input type="checkbox" name="camera" id="camera" [(ngModel)]="camera" (ngModelChange)="calculate()"/><br/>
       <label for="skisPoles">Skis / Poles</label>
@@ -109,7 +111,7 @@
       <label for="skatesOrSkateboard">Skates / Skateboard</label>
       <input type="checkbox" name="skatesOrSkateboard" id="skatesOrSkateboard" [(ngModel)]="skatesOrSkateboard" (ngModelChange)="calculate()"/><br/>
   
-      <input type="submit" (click)="calculate()" value="Calculate pay"/>
+      <!-- <input type="submit" (click)="calculate()" value="Calculate pay"/> -->
   
     </form>
     <h3 *ngIf="totalPay > 0">Total Earned: ${{totalPay | number : '1.2-2'}}</h3>
