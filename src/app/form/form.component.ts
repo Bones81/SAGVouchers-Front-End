@@ -8,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class FormComponent implements OnInit {
   bgType: string = '' // Type of BG work: general, special ability, or stand-in/photo double
   bgTypes: string[] = []
-  startTime: any = '' // should be date/time
+  startTime: string = '' // should be date/time
   startTimeNum: number = 0 // numerical representation of startTime
-  endTime: any = '' // should be date/time
+  endTime: string = '' // should be date/time
   endTimeNum: number = 0 // numerical representation of endTime
   totalHrs: number = 0 // total hrs between call time and out time
   ndbStart: string = '' // start time of Non-Deductible Breakfast
@@ -133,15 +133,19 @@ export class FormComponent implements OnInit {
     this.ot2N2 = .2 * this.overtimeRate2
   }
 
-  calcHrs(): void {
+  private convertMealsToNum(): void {
     this.startTimeNum = this.convertTextTimeToNumber(this.startTime)
     this.endTimeNum = this.convertTextTimeToNumber(this.endTime)
     this.ndbStartNum = this.convertTextTimeToNumber(this.ndbStart)
-    this.ndbEndNum = this.convertTextTimeToNumber(this.ndbEnd)
+    this.ndbEndNum = this.ndbStartNum + 0.25 // All NDBs are 15 minutes long
     this.lunchStartNum = this.convertTextTimeToNumber(this.lunchStart)
     this.lunchEndNum = this.convertTextTimeToNumber(this.lunchEnd)
     this.dinnerStartNum = this.convertTextTimeToNumber(this.dinnerStart)
     this.dinnerEndNum = this.convertTextTimeToNumber(this.dinnerEnd)
+  }
+
+  calcHrs(): void {
+    this.convertMealsToNum()
     if (this.startTimeNum && this.endTimeNum) { // if start and end time values are valid, then calculate hours
       let lunchTime = this.lunchEndNum - this.lunchStartNum || 0
       if (lunchTime > 0 && (lunchTime > 1 || lunchTime < 0.5)) {
