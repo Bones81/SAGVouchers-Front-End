@@ -1,4 +1,4 @@
 <h1>{{title}}</h1>
 <a *ngIf="showFormLink; else message" (click)="toggleFormLink()" routerLink="form">Go to Form</a>
-<ng-template #message>Enter voucher details</ng-template>
+<ng-template #message><h2>Enter voucher details</h2></ng-template>
 <router-outlet></router-outlet>

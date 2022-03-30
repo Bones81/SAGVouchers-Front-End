@@ -156,7 +156,8 @@ export class FormComponent implements OnInit {
     }
     // console.log(this.ndbStartNum)
     // console.log(this.ndbEndNum)
-    // console.log(lunchExpectedStart)
+    console.log('lunchExpectedStart = ' + lunchExpectedStart)
+    console.log('lunchStartNum = ' + this.lunchStartNum)
     // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
     if ((lunchExpectedStart && this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
         (lunchExpectedStart && !this.lunchStartNum && this.endTimeNum > lunchExpectedStart)) {
@@ -176,6 +177,9 @@ export class FormComponent implements OnInit {
       } else {
         this.lunchPenaltiesAmt = 0
       }
+    } else { // no lunch penalties accrued
+      this.lunchPenalties = 0
+      this.lunchPenaltiesAmt = 0
     }
     let dinnerExpectedStart 
     if (this.lunchEndNum) {
@@ -240,9 +244,9 @@ export class FormComponent implements OnInit {
     // console.log(numHH, numMM)
     if (timeStr === this.ndbStart) {
       let numMMinHundredths = Math.floor(numMM / 60 * 100)
-      console.log(numMMinHundredths)
+      // console.log(numMMinHundredths)
       timeNumAsStr = numHH.toString() + "." + numMMinHundredths.toString()
-      console.log(`time number as string: ` + timeNumAsStr)
+      // console.log(`time number as string: ` + timeNumAsStr)
     } else {
       let numMMinTenths = Math.floor(numMM / 60 * 10)
       // console.log( numMMinTenths)

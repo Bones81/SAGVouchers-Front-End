@@ -1,3 +1,14 @@
+.content-container {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 1em;
+}
+
+input[type="number"] {
+  width: 25px;
+}
+
 table {
   background-color: lightgrey;
   border: 1px solid black;
