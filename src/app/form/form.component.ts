@@ -25,11 +25,13 @@ export class FormComponent implements OnInit {
   lunchEnd: string = '' // time lunch break ended
   lunchEndNum: number = 0 // numerical representation of lunchEnd
   lunchPenalties: number = 0 // number of lunch penalties
+  lunchPenaltiesAmt: number = 0 // value of lunch penalties, dependent on number of lunchPenalties
   dinnerStart: string = '' // time dinner break started
   dinnerStartNum: number = 0 // numerical representation of dinnerStart
   dinnerEnd: string = '' // time dinner break ended
   dinnerEndNum: number = 0 // numerical representation of dinnerEnd
   dinnerPenalties: number = 0 // number of dinner penalties
+  dinnerPenaltiesAmt: number = 0 // value of dinner penalties, dependent on number of dinnerPenalties
   hrsWorked: number = 0 // total hours worked (totalHrs - meal breaks)
   overtimeHrs: number = 0 // total hours after the first 8
   baseRate: number = 0 // hourly base rate
@@ -136,12 +138,77 @@ export class FormComponent implements OnInit {
   private convertMealsToNum(): void {
     this.startTimeNum = this.convertTextTimeToNumber(this.startTime)
     this.endTimeNum = this.convertTextTimeToNumber(this.endTime)
-    this.ndbStartNum = this.convertTextTimeToNumber(this.ndbStart)
-    this.ndbEndNum = this.ndbStartNum + 0.25 // All NDBs are 15 minutes long
+    this.ndbStartNum = this.convertTextTimeToNumber(this.ndbStart) || 0
+    this.ndbStartNum ? this.ndbEndNum = this.ndbStartNum + 0.25 : null // All NDBs are 15 minutes long
     this.lunchStartNum = this.convertTextTimeToNumber(this.lunchStart)
     this.lunchEndNum = this.convertTextTimeToNumber(this.lunchEnd)
     this.dinnerStartNum = this.convertTextTimeToNumber(this.dinnerStart)
     this.dinnerEndNum = this.convertTextTimeToNumber(this.dinnerEnd)
+  }
+
+  private calcMealPenalties(): void {
+    // set expected lunch start time
+    let lunchExpectedStart 
+    if (this.ndbEndNum) {
+      lunchExpectedStart = this.ndbEndNum + 6
+    } else { 
+      lunchExpectedStart = this.startTimeNum + 6
+    }
+    // console.log(this.ndbStartNum)
+    // console.log(this.ndbEndNum)
+    // console.log(lunchExpectedStart)
+    // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
+    if ((lunchExpectedStart && this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
+        (lunchExpectedStart && !this.lunchStartNum && this.endTimeNum > lunchExpectedStart)) {
+      let lunchDelay
+      if (this.lunchStartNum) {
+        lunchDelay = this.lunchStartNum - lunchExpectedStart
+      } else {
+        lunchDelay = this.endTimeNum - lunchExpectedStart
+      }
+      this.lunchPenalties = Math.ceil(lunchDelay / .5) // use Math.ceil since even one minute over activates the next penalty
+      if (this.lunchPenalties > 2) {
+        this.lunchPenaltiesAmt = (this.lunchPenalties - 2) * 12.5 + 17.5 // 7.5 (1st penalty) + 10 (2nd) + 12.5 for each subsequent penalty
+      } else if (this.lunchPenalties === 2) {
+        this.lunchPenaltiesAmt = 17.5 // 7.5 (1st penalty) + 10 (2nd penalty)
+      } else if (this.lunchPenalties === 1) {
+        this.lunchPenaltiesAmt = 7.5 // 7.5 (1st penalty)
+      } else {
+        this.lunchPenaltiesAmt = 0
+      }
+    }
+    let dinnerExpectedStart 
+    if (this.lunchEndNum) {
+      dinnerExpectedStart = this.lunchEndNum + 6 
+    } else { 
+      dinnerExpectedStart = null
+    }
+
+    console.log(dinnerExpectedStart)
+    // if there is an expected start time, and there was in fact a dinner break and that break started late...
+    // OR if there was an expected start time, but there was no actual dinner break, and the end time was after the expected dinner break...
+    if ((dinnerExpectedStart && this.dinnerStartNum && this.dinnerStartNum > dinnerExpectedStart) || 
+       (dinnerExpectedStart && !this.dinnerStartNum && this.endTimeNum > dinnerExpectedStart)) {
+      let dinnerDelay // variable to hold length of delay
+      if (this.dinnerStartNum) { // if there was a dinner break, calc delay off of that break time
+        dinnerDelay = this.dinnerStartNum - dinnerExpectedStart
+      } else { // if no dinner break, calc delay off of end time
+        dinnerDelay = this.endTimeNum - dinnerExpectedStart
+      }
+      this.dinnerPenalties = Math.ceil(dinnerDelay / .5) // one penalty for every half hour of delay
+      if (this.dinnerPenalties > 2) {
+        this.dinnerPenaltiesAmt = (this.dinnerPenalties - 2) * 12.5 + 17.5 // 7.5 (1st penalty) + 10 (2nd) + 12.5 for each subsequent penalty
+      } else if (this.dinnerPenalties === 2) {
+        this.dinnerPenaltiesAmt = 17.5 // 7.5 (1st penalty) + 10 (2nd penalty)
+      } else if (this.dinnerPenalties === 1) {
+        this.dinnerPenaltiesAmt = 7.5 // 7.5 (1st penalty)
+      }
+    } else { // the end time occurred before the expected dinner break time or there was no lunch and hence no expected dinner break time
+      this.dinnerPenalties = 0
+      this.dinnerPenaltiesAmt = 0
+    }
+
+    this.totalPenalties = this.lunchPenaltiesAmt + this.dinnerPenaltiesAmt
   }
 
   calcHrs(): void {
@@ -155,6 +222,7 @@ export class FormComponent implements OnInit {
       if (dinnerTime > 0 && (dinnerTime > 1 || dinnerTime < 0.5)) {
         console.log('Meal breaks must be either one-half hour or one hour long.');
       }
+      this.calcMealPenalties()
       // console.log(lunchTime, dinnerTime)
       this.totalHrs = this.endTimeNum - this.startTimeNum
       if (this.totalHrs < 0) {
@@ -168,11 +236,19 @@ export class FormComponent implements OnInit {
   convertTextTimeToNumber(timeStr: string): number {
     let numHH = Number(timeStr.split(':')[0])
     let numMM = Number(timeStr.split(':')[1])
+    let timeNumAsStr
     // console.log(numHH, numMM)
-    let numMMinTenths = Math.floor(numMM / 60 * 10)
-    // console.log( numMMinTenths)
-    let timeNumAsStr = numHH.toString() + "." + numMMinTenths.toString()
-    // console.log(`time number as string: ` + timeNumAsStr)
+    if (timeStr === this.ndbStart) {
+      let numMMinHundredths = Math.floor(numMM / 60 * 100)
+      console.log(numMMinHundredths)
+      timeNumAsStr = numHH.toString() + "." + numMMinHundredths.toString()
+      console.log(`time number as string: ` + timeNumAsStr)
+    } else {
+      let numMMinTenths = Math.floor(numMM / 60 * 10)
+      // console.log( numMMinTenths)
+      timeNumAsStr = numHH.toString() + "." + numMMinTenths.toString()
+      // console.log(`time number as string: ` + timeNumAsStr)
+    }
     let timeNumAsNum = Number(timeNumAsStr)
     // console.log(timeNumAsNum)
     return timeNumAsNum
