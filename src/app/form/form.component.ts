@@ -1,4 +1,3 @@
-import { Time } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,18 +8,25 @@ import { Component, OnInit } from '@angular/core';
 export class FormComponent implements OnInit {
   bgType: string = '' // Type of BG work: general, special ability, or stand-in/photo double
   bgTypes: string[] = []
-  startTime: string = '' // should be date/time
-  endTime: string = '' // should be date/time
+  startTime: any = '' // should be date/time
+  startTimeNum: number = 0 // numerical representation of startTime
+  endTime: any = '' // should be date/time
+  endTimeNum: number = 0 // numerical representation of endTime
+  totalHrs: number = 0 // total hrs between call time and out time
   ot1Trigger: boolean = false // true when OT 1 triggers
   ot2Trigger: boolean = false // true when OT 2 triggers
   goldenTrigger: boolean = false // true when golden time triggers
   lunchStart: string = '' // time lunch break started
+  lunchStartNum: number = 0 // numerical representation of lunchStart
   lunchEnd: string = '' // time lunch break ended
+  lunchEndNum: number = 0 // numerical representation of lunchEnd
   lunchPenalties: number = 0 // number of lunch penalties
   dinnerStart: string = '' // time dinner break started
+  dinnerStartNum: number = 0 // numerical representation of dinnerStart
   dinnerEnd: string = '' // time dinner break ended
+  dinnerEndNum: number = 0 // numerical representation of dinnerEnd
   dinnerPenalties: number = 0 // number of dinner penalties
-  hrsWorked: number = 0 // total hours worked
+  hrsWorked: number = 0 // total hours worked (totalHrs - meal breaks)
   overtimeHrs: number = 0 // total hours after the first 8
   baseRate: number = 0 // hourly base rate
   applicableRate: number = 0 // current rate to use in calculating wages
@@ -107,6 +113,7 @@ export class FormComponent implements OnInit {
 
   calcRates(): void {
     this.calcBaseRate() // determine base rate
+    this.basePay = 8 * this.baseRate
     this.overtimeRate1 = 1.5 * this.baseRate // set OT1 rate
     this.overtimeRate2 = 2 * this.baseRate // set OT2 rate
     this.goldenRate = 8 * this.baseRate // set golden bonus
@@ -118,9 +125,51 @@ export class FormComponent implements OnInit {
     this.ot2N2 = .2 * this.overtimeRate2
   }
 
+  calcHrs(): void {
+    this.startTimeNum = this.convertTextTimeToNumber(this.startTime)
+    this.endTimeNum = this.convertTextTimeToNumber(this.endTime)
+    this.lunchStartNum = this.convertTextTimeToNumber(this.lunchStart)
+    this.lunchEndNum = this.convertTextTimeToNumber(this.lunchEnd)
+    this.dinnerStartNum = this.convertTextTimeToNumber(this.dinnerStart)
+    this.dinnerEndNum = this.convertTextTimeToNumber(this.dinnerEnd)
+    if (this.startTimeNum && this.endTimeNum) { // if start and end time values are valid, then calculate hours
+      let lunchTime = this.lunchEndNum - this.lunchStartNum || 0
+      if (lunchTime > 0 && (lunchTime > 1 || lunchTime < 0.5)) {
+        console.log('Meal breaks must be either one-half hour or one hour long.');
+      }
+      let dinnerTime = this.dinnerEndNum - this.dinnerStartNum || 0
+      if (dinnerTime > 0 && (dinnerTime > 1 || dinnerTime < 0.5)) {
+        console.log('Meal breaks must be either one-half hour or one hour long.');
+      }
+      console.log(lunchTime, dinnerTime)
+      this.totalHrs = this.endTimeNum - this.startTimeNum
+      if (this.totalHrs < 0) {
+        this.totalHrs += 24
+      }
+      console.log(this.totalHrs)
+      this.hrsWorked = this.totalHrs - lunchTime - dinnerTime
+    }
+  }
+
+  convertTextTimeToNumber(timeStr: string): number {
+    let numHH = Number(timeStr.split(':')[0])
+    let numMM = Number(timeStr.split(':')[1])
+    // console.log(numHH, numMM)
+    let numMMinTenths = Math.floor(numMM / 60 * 10)
+    // console.log( numMMinTenths)
+    let timeNumAsStr = numHH.toString() + "." + numMMinTenths.toString()
+    // console.log(`time number as string: ` + timeNumAsStr)
+    let timeNumAsNum = Number(timeNumAsStr)
+    // console.log(timeNumAsNum)
+    return timeNumAsNum
+
+  }
+
+
   calculate(): void {
+    this.calcHrs()
     this.calcRates()
-    console.log(`base rate: ${this.baseRate}\not1 rate: ${this.overtimeRate1}\not2 rate: ${this.overtimeRate2}`)
+    // console.log(`base rate: ${this.baseRate}\not1 rate: ${this.overtimeRate1}\not2 rate: ${this.overtimeRate2}`)
 
     if (this.hrsWorked <= 8 && this.hrsWorked > 0) { // worked 8 hrs or less, earns 8hrs pay and no overtime
       this.applicableRate = this.baseRate
@@ -143,7 +192,7 @@ export class FormComponent implements OnInit {
       }
     } else if (this.hrsWorked <= 0) {
       this.totalWages = 0
-      this.basePay = 0
+      // this.basePay = 0
       this.overtimePay = 0
       this.totalWages = this.basePay + this.overtimePay
 

@@ -1,10 +1,34 @@
-<form>
+<form >
   <label for="bgType">Work Category: </label>
   <select name="bgType" id="bgType" [(ngModel)]="bgType" (ngModelChange)="calculate()">
     <option *ngFor="let bgType of bgTypes" [ngValue]="bgType">{{bgType}}</option>
   </select><br/>
-  <label for="hrsWorked">Total Hours Worked: </label>
-  <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" />
+
+  <label for="wetPay">Wet work? </label>
+  <input type="checkbox" name="wetPay" id="wetPay" [(ngModel)]="wetPay" (ngModelChange)="calculate()"/>
+  <label for="smokePay">Smoke work? </label>
+  <input type="checkbox" name="smokePay" id="smokePay" [(ngModel)]="smokePay" (ngModelChange)="calculate()"/>
+  <label for="hmu">Full beard or body makeup? </label>
+  <input type="checkbox" name="hmu" id="hmu" [(ngModel)]="hmu" (ngModelChange)="calculate()"/><br/>
+
+
+  <label for="startTime">Start time: </label>
+  <input type="time" id="startTime" name="startTime" [(ngModel)]="startTime" (ngModelChange)="calculate()"/><br/>
+  <label for="endTime">End time: </label>
+  <input type="time" id="endTime" name="endTime" [(ngModel)]="endTime" (ngModelChange)="calculate()"/><br/>
+
+  <label for="lunchStart">Lunch start: </label>
+  <input type="time" id="lunchStart" name="lunchStart" [(ngModel)]="lunchStart" (ngModelChange)="calculate()"/><br/>
+  <label for="lunchEnd">Lunch end: </label>
+  <input type="time" id="lunchEnd" name="lunchEnd" [(ngModel)]="lunchEnd" (ngModelChange)="calculate()"/><br/>
+
+  <label for="dinnerStart">Dinner start: </label>
+  <input type="time" id="dinnerStart" name="dinnerStart" [(ngModel)]="dinnerStart" (ngModelChange)="calculate()"/><br/>
+  <label for="dinnerEnd">Dinner end: </label>
+  <input type="time" id="dinnerEnd" name="dinnerEnd" [(ngModel)]="dinnerEnd" (ngModelChange)="calculate()"/><br/>
+
+  <!-- <label for="hrsWorked">Total Hours Worked: </label>
+  <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" /> -->
 
   <input type="submit" (click)="calculate()" value="Calculate pay"/>
 
@@ -23,6 +47,22 @@
     <tr>
       <td>Work Category</td>
       <td>{{bgType}}</td>
+    </tr>
+    <tr>
+      <td>Wet Pay?</td>
+      <td>{{wetPay}}</td>
+    </tr>
+    <tr>
+      <td>Smoke Pay? </td>
+      <td>{{smokePay}}</td>
+    </tr>
+    <tr>
+      <td>Full beard or Body makeup? </td>
+      <td>{{hmu}}</td>
+    </tr>
+    <tr>
+      <td>Base rate</td>
+      <td>${{baseRate | number: '1.2-2'}}/hr</td>
     </tr>
     <tr>
       <td>Clock-in time</td>
@@ -63,10 +103,6 @@
     <tr>
       <td># of overtime hours</td>
       <td>{{overtimeHrs | number: '1.1-1'}}</td>
-    </tr>
-    <tr>
-      <td>Base rate</td>
-      <td>${{baseRate | number: '1.2-2'}}/hr</td>
     </tr>
     <tr>
       <td>First 2 hours of overtime (between work hours 9 and 10)</td>
