@@ -248,6 +248,11 @@ export class FormComponent implements OnInit {
       this.dinnerStartNum += 24
     }
 
+    // case where end time is after midnight, dinner is expected, but no dinner is provided: adjust dinnerExpectedStart so that calculations will run better
+    if (dinnerExpectedStart && !this.dinnerStartNum && this.endTimeNum <= 6) {
+      dinnerExpectedStart -= 24
+    }
+
     console.log('dinner start time: ' + this.dinnerStartNum)
     // if there is an expected start time, and there was in fact a dinner break and that break started late...
     // OR if there was an expected start time, but there was no actual dinner break, and the end time was after the expected dinner break...
@@ -372,9 +377,38 @@ export class FormComponent implements OnInit {
 
   }
 
+  private calcHrsAfter8pm(): void {
+    // starting value of hoursWorkedAfter8pm
+    let hoursWorkedAfter8pm = this.endTimeNum - 20
+
+    // for hoursWorkedAt8pm, handle lunch scenarios
+    if (this.lunchLength && this.lunchStartNum > 20) { // if entire lunch is after 8pm
+      hoursWorkedAfter8pm -= this.lunchLength
+    } else if (this.lunchLength && this.lunchEndNum > 20 && this.lunchStartNum < 20) { // lunch starts before 8pm and ends after 8pm
+      let lunchSegmentToSubtract = this.lunchEndNum - 20
+      hoursWorkedAfter8pm -= lunchSegmentToSubtract
+    } 
+    // if entire lunch is before 8pm, no lunch hours should be subtracted from hoursWorkedAfter8pm
+
+    // for hoursWorkedAt8pm, handle dinner scenarios
+    if (this.dinnerLength && this.dinnerStartNum > 20) { // if entire dinner is after 8pm
+      hoursWorkedAfter8pm -= this.dinnerLength
+    } else if (this.dinnerLength && this.dinnerEndNum > 20 && this.dinnerStartNum < 20) { // dinner starts before 8pm and ends after 8pm
+      let dinnerSegmentToSubtract = this.dinnerEndNum - 20
+      hoursWorkedAfter8pm -= dinnerSegmentToSubtract
+    }
+    //if entire dinner is before 8pm, no dinner hours should be subtracted from hoursWorkedAfter8pm
+    
+  }
+
+  private calcHrsAfter1am(): void {
+    // starting value of hoursWorkedAfter1am
+    let hoursWorkedAfter1am = this.endTimeNum - 25
+  }
+
   private calcNightPremiums(): void {
     // determine if night premium 1 bonuses apply:
-    if (this.endTimeNum > 20 || this.endTimeNum < this.startTimeNum) { // is end time after 8pm or after midnight
+    if (this.endTimeNum > 20 || this.endTimeNum < this.startTimeNum) { // is end time after 8pm or after midnight?
       this.night1Trigger = true
     }
     if(this.night1Trigger) {
@@ -385,7 +419,8 @@ export class FormComponent implements OnInit {
       }
     }
     // need to know hoursWorkedAt8pm and hoursWorkedAt1am
-
+    this.calcHrsAfter8pm()
+    this.calcHrsAfter1am()
   }
 
   calculate(): void {
