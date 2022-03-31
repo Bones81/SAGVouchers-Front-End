@@ -18,8 +18,11 @@ export class FormComponent implements OnInit {
   ndbEnd: string = '' // end time of Non-Deductible Breakfast
   ndbEndNum: number = 0 // numerical representation of ndbEnd
   ot1Trigger: boolean = false // true when OT 1 triggers
+  ot1TriggerTimeNum: number = 0 // numerical representation of when OT 1 rate triggers
   ot2Trigger: boolean = false // true when OT 2 triggers
+  ot2TriggerTimeNum: number = 0 // numerical representation of when OT 2 rate triggers
   goldenTrigger: boolean = false // true when golden time triggers
+  goldenTriggerTimeNum: number = 0 // numerical representation of when golden time bonus triggers
   lunchStart: string = '' // time lunch break started
   lunchStartNum: number = 0 // numerical representation of lunchStart
   lunchEnd: string = '' // time lunch break ended
@@ -39,16 +42,41 @@ export class FormComponent implements OnInit {
   overtimeRate1: number = 0 // rate for first 2 hours of overtime, i.e. 1.5xbaserate
   overtimeRate2: number = 0 // rate for ot above 2 hours, i.e. 2xbaserate
   goldenRate: number = 0 // rate per hour when endTime - startTime > 16 hrs, meals times are included in this 16 hr calculation. Literally just endTime - startTime > 16 hrs.
-  baseN1: number = 0 // +10% during night premium 1 if OT1 not triggered
-  baseN2: number = 0 // +20% during night premium 2 if OT1 not triggered
-  ot1N1: number = 0 // +10% during night premium 1 if OT1 triggered but not OT 2
-  ot1N2: number = 0 // +20% during night premium 2 if OT1 triggered but not OT 2
-  ot2N1: number = 0 // +10% during night premium 1 if OT2 triggered
-  ot2N2: number = 0 // +20% during night premium 2 if OT2 triggered
+  
+  // Night premium variables
+  night1Trigger: boolean = false // true when night premium 1 triggers
+  night1TriggerNum: number = 0 // work hour number when night premium 1 triggers
+  baseN1Hrs: number = 0 // number of hours in night premium 1 to be charged at base rate
+  baseN1Rate: number = 0 // +10% during night premium 1 if OT1 not triggered
+  baseN1Amt: number = 0 // Amt of night premium 1 bonus earned from base rate hrs
+  ot1N1Hrs: number = 0 // number of hrs in night premium 1 to be charged at OT1 rate
+  ot1N1Rate: number = 0 // +10% during night premium 1 if OT1 triggered but not OT 2
+  ot1N1Amt: number = 0 // Amt of night premium 1 bonus earned from OT1 hrs
+  ot2N1Hrs: number = 0 // number of hrs in night premium 1 to be charged at OT2 rate
+  ot2N1Rate: number = 0 // +10% during night premium 1 if OT2 triggered
+  ot2N1Amt: number = 0 // Amt of night premium 1 bonus earned from OT2 hrs
+  totalNight1Amt: number = 0 // amt earned from night premium 1 bonuses
+
+  night2Trigger: boolean = false // true when night premium 2 triggers
+  night2TriggerNum: number = 0 // work hour number when night premium 2 triggers
+  baseN2Hrs: number = 0 // number of hrs in night premium 2 to be charged at base rate
+  baseN2Rate: number = 0 // +20% during night premium 2 if OT1 not triggered
+  baseN2Amt: number = 0 // Amt of night premium 2 bonus earned from base rate hrs
+  ot1N2Hrs: number = 0 // number of hrs in night premium 2 to be charged at OT1 rate
+  ot1N2Rate: number = 0 // +20% during night premium 2 if OT1 triggered but not OT 2
+  ot1N2Amt: number = 0 // Amt of night premium 2 bonus earned from OT1 hrs
+  ot2N2Hrs: number = 0 // number of hrs in night premium 2 to be charged at OT2 rate
+  ot2N2Rate: number = 0 // +20% during night premium 2 if OT2 triggered
+  ot2N2Amt: number = 0 // Amt of night premium 2 bonus earned from OT2 hrs
+  totalNight2Amt: number = 0 // amt earned from night premium 2 bonuses
+
+  totalNightPremiumsAmt: number = 0 // total amt earned from night premium bonuses, separate from regular or overtime wages
+
   basePay: number = 0 // pay for 8 hr minimum at base rate
   ot1Pay: number = 0 // pay for time-and-a-half hrs (hr 8 - 10)
   ot2Pay: number = 0 // pay for double time hrs (hr 10+)
   overtimePay: number = 0 // total pay for OT hrs
+
   totalWages: number = 0 // total hourly wages, including OT and night premium and base rate adjustments, but not including bumps/penalties
   totalBumps: number = 0 // combined total of all bumps
   totalPenalties: number = 0 // combined total of all meal penalties
@@ -127,12 +155,12 @@ export class FormComponent implements OnInit {
     this.overtimeRate1 = 1.5 * this.baseRate // set OT1 rate
     this.overtimeRate2 = 2 * this.baseRate // set OT2 rate
     this.goldenRate = 8 * this.baseRate // set golden bonus
-    this.baseN1 = .1 * this.baseRate // set night premiums
-    this.baseN2 = .2 * this.baseRate
-    this.ot1N1 = .1 * this.overtimeRate1
-    this.ot1N2 = .2 * this.overtimeRate1
-    this.ot2N1 = .1 * this.overtimeRate2
-    this.ot2N2 = .2 * this.overtimeRate2
+    this.baseN1Rate = .1 * this.baseRate // set night premiums
+    this.baseN2Rate = .2 * this.baseRate
+    this.ot1N1Rate = .1 * this.overtimeRate1
+    this.ot1N2Rate = .2 * this.overtimeRate1
+    this.ot2N1Rate = .1 * this.overtimeRate2
+    this.ot2N2Rate = .2 * this.overtimeRate2
   }
 
   private convertMealsToNum(): void {
