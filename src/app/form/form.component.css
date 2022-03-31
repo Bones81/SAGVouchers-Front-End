@@ -19,3 +19,9 @@ td {
   border: 1px solid black;
   padding: 2px 5px;
 }
+
+.table-flex {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1em;
+}

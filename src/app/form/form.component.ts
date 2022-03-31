@@ -27,25 +27,26 @@ export class FormComponent implements OnInit {
   lunchStartNum: number = 0 // numerical representation of lunchStart
   lunchEnd: string = '' // time lunch break ended
   lunchEndNum: number = 0 // numerical representation of lunchEnd
+  lunchLength: number = 0 // length of lunch break in hrs
   lunchPenalties: number = 0 // number of lunch penalties
   lunchPenaltiesAmt: number = 0 // value of lunch penalties, dependent on number of lunchPenalties
   dinnerStart: string = '' // time dinner break started
   dinnerStartNum: number = 0 // numerical representation of dinnerStart
   dinnerEnd: string = '' // time dinner break ended
   dinnerEndNum: number = 0 // numerical representation of dinnerEnd
+  dinnerLength: number = 0 // length of dinner break in hrs
   dinnerPenalties: number = 0 // number of dinner penalties
   dinnerPenaltiesAmt: number = 0 // value of dinner penalties, dependent on number of dinnerPenalties
   hrsWorked: number = 0 // total hours worked (totalHrs - meal breaks)
   overtimeHrs: number = 0 // total hours after the first 8
   baseRate: number = 0 // hourly base rate
-  applicableRate: number = 0 // current rate to use in calculating wages
   overtimeRate1: number = 0 // rate for first 2 hours of overtime, i.e. 1.5xbaserate
   overtimeRate2: number = 0 // rate for ot above 2 hours, i.e. 2xbaserate
   goldenRate: number = 0 // rate per hour when endTime - startTime > 16 hrs, meals times are included in this 16 hr calculation. Literally just endTime - startTime > 16 hrs.
   
   // Night premium variables
   night1Trigger: boolean = false // true when night premium 1 triggers
-  night1TriggerNum: number = 0 // work hour number when night premium 1 triggers
+  hoursWorkedAt8pm: number = 0 // work hour number when night premium 1 triggers
   baseN1Hrs: number = 0 // number of hours in night premium 1 to be charged at base rate
   baseN1Rate: number = 0 // +10% during night premium 1 if OT1 not triggered
   baseN1Amt: number = 0 // Amt of night premium 1 bonus earned from base rate hrs
@@ -55,10 +56,11 @@ export class FormComponent implements OnInit {
   ot2N1Hrs: number = 0 // number of hrs in night premium 1 to be charged at OT2 rate
   ot2N1Rate: number = 0 // +10% during night premium 1 if OT2 triggered
   ot2N1Amt: number = 0 // Amt of night premium 1 bonus earned from OT2 hrs
+  totalNight1Hrs: number = 0 // number of total hrs for which night premium 1 applies
   totalNight1Amt: number = 0 // amt earned from night premium 1 bonuses
 
   night2Trigger: boolean = false // true when night premium 2 triggers
-  night2TriggerNum: number = 0 // work hour number when night premium 2 triggers
+  hoursWorkedAt1am: number = 0 // work hour number when night premium 2 triggers
   baseN2Hrs: number = 0 // number of hrs in night premium 2 to be charged at base rate
   baseN2Rate: number = 0 // +20% during night premium 2 if OT1 not triggered
   baseN2Amt: number = 0 // Amt of night premium 2 bonus earned from base rate hrs
@@ -68,12 +70,16 @@ export class FormComponent implements OnInit {
   ot2N2Hrs: number = 0 // number of hrs in night premium 2 to be charged at OT2 rate
   ot2N2Rate: number = 0 // +20% during night premium 2 if OT2 triggered
   ot2N2Amt: number = 0 // Amt of night premium 2 bonus earned from OT2 hrs
+  totalNight2Hrs: number = 0 // number of total hrs for which night premium 2 applies
   totalNight2Amt: number = 0 // amt earned from night premium 2 bonuses
 
   totalNightPremiumsAmt: number = 0 // total amt earned from night premium bonuses, separate from regular or overtime wages
 
+  // The various sums to calculate
   basePay: number = 0 // pay for 8 hr minimum at base rate
+  ot1Hrs: number = 0 // number of hours payable at OT1 rate
   ot1Pay: number = 0 // pay for time-and-a-half hrs (hr 8 - 10)
+  ot2Hrs: number = 0 // number of hours payable at OT2 rate
   ot2Pay: number = 0 // pay for double time hrs (hr 10+)
   overtimePay: number = 0 // total pay for OT hrs
 
@@ -112,6 +118,8 @@ export class FormComponent implements OnInit {
   mileage: number = 0
   tolls: number = 0
 
+  hazardPay: number = 0 // negotiated amount for hazardous work
+  otherBumps: number = 0 // negotiated amount for any other bumps
 
   constructor() { }
 
@@ -175,6 +183,7 @@ export class FormComponent implements OnInit {
   }
 
   private calcMealPenalties(): void {
+    // lunch penalties section
     // set expected lunch start time
     let lunchExpectedStart 
     if (this.ndbEndNum) {
@@ -212,6 +221,8 @@ export class FormComponent implements OnInit {
       this.lunchPenalties = 0
       this.lunchPenaltiesAmt = 0
     }
+
+    // dinner penalties section
     let dinnerExpectedStart 
     if (this.lunchEndNum) {
       dinnerExpectedStart = this.lunchEndNum + 6 
@@ -249,22 +260,22 @@ export class FormComponent implements OnInit {
   calcHrs(): void {
     this.convertMealsToNum()
     if (this.startTimeNum && this.endTimeNum) { // if start and end time values are valid, then calculate hours
-      let lunchTime = this.lunchEndNum - this.lunchStartNum || 0
-      if (lunchTime > 0 && (lunchTime > 1 || lunchTime < 0.5)) {
+      this.lunchLength = this.lunchEndNum - this.lunchStartNum || 0
+      if (this.lunchLength > 0 && (this.lunchLength > 1 || this.lunchLength < 0.5)) {
         console.log('Meal breaks must be either one-half hour or one hour long.');
       }
-      let dinnerTime = this.dinnerEndNum - this.dinnerStartNum || 0
-      if (dinnerTime > 0 && (dinnerTime > 1 || dinnerTime < 0.5)) {
+      this.dinnerLength = this.dinnerEndNum - this.dinnerStartNum || 0
+      if (this.dinnerLength > 0 && (this.dinnerLength > 1 || this.dinnerLength < 0.5)) {
         console.log('Meal breaks must be either one-half hour or one hour long.');
       }
       this.calcMealPenalties()
-      // console.log(lunchTime, dinnerTime)
+      // console.log(this.lunchLength, this.dinnerLength)
       this.totalHrs = this.endTimeNum - this.startTimeNum
       if (this.totalHrs < 0) {
         this.totalHrs += 24
       }
-      console.log(this.totalHrs)
-      this.hrsWorked = this.totalHrs - lunchTime - dinnerTime
+      // console.log(this.totalHrs)
+      this.hrsWorked = this.totalHrs - this.lunchLength - this.dinnerLength
     }
   }
 
@@ -316,6 +327,37 @@ export class FormComponent implements OnInit {
     this.skatesOrSkateboard ? this.totalBumps += 5.50 : null
     this.mileage ? this.totalBumps += 0.3 * this.mileage : null
     this.tolls ? this.totalBumps += this.tolls : null
+    this.hazardPay ? this.totalBumps += this.hazardPay : null
+    this.otherBumps ? this.totalBumps += this.otherBumps : null
+  }
+
+  calcOTTriggerNums(): void {
+    this.ot1TriggerTimeNum = this.startTimeNum + 8
+    if (this.lunchLength && this.lunchPenalties < 4) {
+      this.ot1TriggerTimeNum += this.lunchLength
+    }
+    if (this.lunchLength && this.dinnerLength && this.dinnerStartNum < this.startTimeNum + 8 + this.lunchLength) {
+      this.ot1TriggerTimeNum += this.dinnerLength
+    }
+    this.ot2TriggerTimeNum = this.startTimeNum + 10
+    if (this.lunchLength && this.lunchPenalties < 8) {
+      this.ot2TriggerTimeNum += this.lunchLength
+    }
+
+  }
+
+  calcNightPremiums(): void {
+    // determine if night premium 1 bonuses apply:
+    if (this.endTimeNum > 20 || this.endTimeNum < this.startTimeNum) { // is end time after 8pm or after midnight
+      this.night1Trigger = true
+    }
+    if(this.night1Trigger) {
+      this.totalNight1Hrs = this.endTimeNum - 20 // end time - 8pm
+      if (this.totalNight1Hrs > 5) { // can't be more than 5 hours
+        this.totalNight1Hrs = 5
+      }
+    }
+    // need to know when OT1 triggers, when OT2 triggers, and also hoursWorkedAt8pm and hoursWorkedAt1am
   }
 
   calculate(): void {
@@ -325,32 +367,41 @@ export class FormComponent implements OnInit {
     // console.log(`base rate: ${this.baseRate}\not1 rate: ${this.overtimeRate1}\not2 rate: ${this.overtimeRate2}`)
 
     if (this.hrsWorked <= 8 && this.hrsWorked > 0) { // worked 8 hrs or less, earns 8hrs pay and no overtime
-      this.applicableRate = this.baseRate
       this.hrsWorked = 8
-      this.basePay = this.hrsWorked * this.applicableRate
+      this.basePay = this.hrsWorked * this.baseRate
       // console.log(`basePay: ${this.basePay}`)
       this.overtimeHrs = 0
       this.overtimePay = 0
     } else if (this.hrsWorked > 8) { // worked more than 8 hrs
       this.overtimeHrs = parseFloat((Math.round((this.hrsWorked - 8) * 10) / 10).toFixed(1)) // calculate OT hrs and round to nearest tenth of an hour, ensure one decimal place, and convert a toFixed value (which is a string) into Float (which is a Number type and thus can be used in mathematical expressions)
       if (this.overtimeHrs <= 2) { // for first 2 hrs of OT
-        this.applicableRate = this.baseRate
-        this.basePay = 8 * this.applicableRate// earn base rate plus
-        this.applicableRate = this.overtimeRate1
-        this.overtimePay = this.overtimeHrs * this.applicableRate // OT hrs at OT rate 1
+        this.ot1Hrs = this.overtimeHrs
+        this.basePay = 8 * this.baseRate// earn base rate plus
+        this.ot1Pay = this.overtimeHrs * this.overtimeRate1 // OT hrs at OT rate 1
+        this.overtimePay = this.ot1Pay
       } else if (this.overtimeHrs > 2) { // 8hrs at base rate, 2 hrs at OT rate 1, all remaining hrs at OT rate 2
         // add logic for Golden Time scenario later
         this.basePay = 8 * this.baseRate // earn base pay plus
-        this.overtimePay = 2 * this.overtimeRate1 + (this.overtimeHrs - 2) * this.overtimeRate2 // OT pay calulation
+        this.ot1Hrs = 2
+        this.ot1Pay = this.ot1Hrs * this.overtimeRate1
+        this.ot2Hrs = this.overtimeHrs - 2
+        this.ot2Pay = this.ot2Hrs * this.overtimeRate2
+        this.overtimePay = this.ot1Pay + this.ot2Pay // OT pay calulation
       }
     } else if (this.hrsWorked <= 0) {
       this.totalWages = 0
       // this.basePay = 0
+      this.ot1Hrs = 0
+      this.ot2Hrs = 0
+      this.ot1Pay = 0
+      this.ot2Pay = 0
       this.overtimePay = 0
       this.totalWages = this.basePay + this.overtimePay
 
       console.log('Please enter a number of hours greater than 0')
     }
+
+    this.calcNightPremiums()
     
     this.totalWages = this.basePay + this.overtimePay // total, taking into account work category and overtime hours, but not considering night premium or other bumps/penalties
 

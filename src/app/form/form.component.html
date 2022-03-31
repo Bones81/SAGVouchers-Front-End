@@ -111,6 +111,11 @@
       </div><br/>
       <label for="skatesOrSkateboard">Skates / Skateboard (+5.50)</label>
       <input type="checkbox" name="skatesOrSkateboard" id="skatesOrSkateboard" [(ngModel)]="skatesOrSkateboard" (ngModelChange)="calculate()"/><br/>
+      <h4>Other bumps</h4>
+      <label for="hazardPay">Negotiated $ amt for hazard pay</label>
+      <input type="number" name="hazardPay" id="hazardPay" [(ngModel)]="hazardPay" (ngModelChange)="calculate()"/><br/>
+      <label for="otherBumps">Negotiated $ amt for any other bumps</label>
+      <input type="number" name="otherBumps" id="otherBumps" [(ngModel)]="otherBumps" (ngModelChange)="calculate()"/><br/>
   
       <!-- <input type="submit" (click)="calculate()" value="Calculate pay"/> -->
   
@@ -118,152 +123,259 @@
     <h3 *ngIf="totalPay > 0">Total Earned: ${{totalPay | number : '1.2-2'}}</h3>
   </div>
   <div class="table-container">
+    <div class="table-flex">
+      <table>
+        <thead>
+          <th>
+            variable
+          </th>
+          <th>
+            value
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Work Category</td>
+            <td>{{bgType}}</td>
+          </tr>
+          <tr>
+            <td>Wet Pay</td>
+            <td>{{wetPay}}</td>
+          </tr>
+          <tr>
+            <td>Smoke Pay </td>
+            <td>{{smokePay}}</td>
+          </tr>
+          <tr>
+            <td>Full beard or Body makeup </td>
+            <td>{{hmu}}</td>
+          </tr>
+          <tr>
+            <td>Base rate</td>
+            <td>${{baseRate | number: '1.2-2'}}/hr</td>
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <tbody>
+          <tr>
+            <td>Clock-in time</td>
+            <td>{{startTime}}</td>
+            <td>total # of hours worked</td>
+            <td>{{hrsWorked | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>Clock-out time</td>
+            <td>{{endTime}}</td>
+            <td># of overtime hours</td>
+            <td>{{overtimeHrs | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>Lunch start time</td>
+            <td>{{lunchStart}}</td>
+          </tr>
+          <tr>
+            <td>Lunch end time</td>
+            <td>{{lunchEnd}}</td>
+          </tr>
+          <tr>
+            <td>Dinner start time</td>
+            <td>{{dinnerStart}}</td>
+          </tr>
+          <tr>
+            <td>Dinner end time</td>
+            <td>{{dinnerEnd}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-flex">
+      <table>
+        <tbody>
+          <tr>
+            <td>Lunch penalties</td>
+            <td>{{lunchPenalties}}</td>
+          </tr>
+          <tr>
+            <td>Lunch penalty amount</td>
+            <td>${{lunchPenaltiesAmt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>Dinner penalties</td>
+            <td>{{dinnerPenalties}}</td>
+          </tr>
+          <tr>
+            <td>Dinner penalty amount</td>
+            <td>${{dinnerPenaltiesAmt | number: '1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <tbody>
+          <tr>
+            <td>total # of hours worked</td>
+            <td>{{hrsWorked | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td># of overtime hours</td>
+            <td>{{overtimeHrs | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>OT1 rate (hrs 8-10)</td>
+            <td>${{overtimeRate1 | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td># of OT1 hrs</td>
+            <td>{{ot1Hrs | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>OT1 pay</td>
+            <td>${{ot1Pay | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>OT2 rate (hrs 10+)</td>
+            <td>${{overtimeRate2 | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td># of OT2 hrs</td>
+            <td>{{ot2Hrs | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>OT2 pay</td>
+            <td>${{ot2Pay | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>Total overtime pay</td>
+            <td>${{overtimePay | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>"Golden time" bonus (after 16 total hrs)</td>
+            <td>${{goldenRate | number: '1.2-2'}}/hr </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-flex">
+      <table>
+        <tbody>
+          <th>Night Premium 1 values</th>
+          <tr>
+            <td>Night premium 1 triggered?</td>
+            <td>{{night1Trigger}}</td>
+          </tr>
+          <tr>
+            <td>Work hr number @ 8pm</td>
+            <td>{{hoursWorkedAt8pm}}</td>
+          </tr>
+          <tr>
+            <td>Total N1 hrs</td>
+            <td>{{totalNight1Hrs | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>N1 hrs @ base rate</td>
+            <td>{{baseN1Hrs | number: '1.1-1'}} hrs</td>
+          </tr>
+          <tr>
+            <td>baseN1 rate</td>
+            <td>${{baseN1Rate | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td>Amt of N1 earned @ base rate</td>
+            <td>${{baseN1Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>N1 hrs @ OT1 rate</td>
+            <td>{{ot1N1Hrs | number: '1.1-1'}} hrs</td>
+          </tr>
+          <tr>
+            <td>ot1N1 rate</td>
+            <td>${{ot1N1Rate | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td>Amt of N1 earned @ OT1 rate</td>
+            <td>${{ot1N1Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>N1 hrs @ OT2 rate</td>
+            <td>{{ot2N1Hrs | number: '1.1-1'}} hrs</td>
+          </tr>
+          <tr>
+            <td>ot2N1 rate</td>
+            <td>${{ot2N1Rate | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td>Amt of N1 earned @ OT2 rate</td>
+            <td>${{ot2N1Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>Total from night premium 1</td>
+            <td>${{totalNight1Amt | number: '1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <tbody>
+          <th>Night Premium 2 values</th>
+          <tr>
+            <td>Night premium 2 triggered?</td>
+            <td>{{night2Trigger}}</td>
+          </tr>
+          <tr>
+            <td>Work hr number @ 1am</td>
+            <td>{{hoursWorkedAt1am}}</td>
+          </tr>
+          <tr>
+            <td>Total N2 hrs</td>
+            <td>{{totalNight2Hrs | number: '1.1-1'}}</td>
+          </tr>
+          <tr>
+            <td>N2 hrs @ base rate</td>
+            <td>{{baseN2Hrs | number: '1.1-1'}} hrs</td>
+          </tr>
+          <tr>
+            <td>baseN2 rate</td>
+            <td>${{baseN2Rate | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td>Amt of N2 earned @ base rate</td>
+            <td>${{baseN2Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>N2 hrs @ OT1 rate</td>
+            <td>{{ot1N2Hrs | number: '1.1-1'}} hrs</td>
+          </tr>
+          <tr>
+            <td>ot1N2 rate</td>
+            <td>${{ot1N2Rate | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td>Amt of N2 earned @ OT1 rate</td>
+            <td>${{ot1N2Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>N2 hrs @ OT2 rate</td>
+            <td>{{ot2N2Hrs | number: '1.1-1'}} hrs</td>
+          </tr>
+          <tr>
+            <td>ot2N2 rate</td>
+            <td>${{ot2N2Rate | number: '1.2-2'}}/hr</td>
+          </tr>
+          <tr>
+            <td>Amt of N2 earned @ OT2 rate</td>
+            <td>${{ot2N2Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>Total from night premium 2</td>
+            <td>${{totalNight2Amt | number: '1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <table>
-      <thead>
-        <th>
-          variable
-        </th>
-        <th>
-          value
-        </th>
-      </thead>
       <tbody>
-        <tr>
-          <td>Work Category</td>
-          <td>{{bgType}}</td>
-        </tr>
-        <tr>
-          <td>Wet Pay</td>
-          <td>{{wetPay}}</td>
-        </tr>
-        <tr>
-          <td>Smoke Pay </td>
-          <td>{{smokePay}}</td>
-        </tr>
-        <tr>
-          <td>Full beard or Body makeup </td>
-          <td>{{hmu}}</td>
-        </tr>
-        <tr>
-          <td>Base rate</td>
-          <td>${{baseRate | number: '1.2-2'}}/hr</td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <tr>
-          <td>Clock-in time</td>
-          <td>{{startTime}}</td>
-          <td>total # of hours worked</td>
-          <td>{{hrsWorked | number: '1.1-1'}}</td>
-        </tr>
-        <tr>
-          <td>Clock-out time</td>
-          <td>{{endTime}}</td>
-          <td># of overtime hours</td>
-          <td>{{overtimeHrs | number: '1.1-1'}}</td>
-        </tr>
-        <tr>
-          <td>Lunch start time</td>
-          <td>{{lunchStart}}</td>
-        </tr>
-        <tr>
-          <td>Lunch end time</td>
-          <td>{{lunchEnd}}</td>
-        </tr>
-        <tr>
-          <td>Dinner start time</td>
-          <td>{{dinnerStart}}</td>
-        </tr>
-        <tr>
-          <td>Dinner end time</td>
-          <td>{{dinnerEnd}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <tr>
-          <td>Lunch penalties</td>
-          <td>{{lunchPenalties}}</td>
-        </tr>
-        <tr>
-          <td>Lunch penalty amount</td>
-          <td>{{lunchPenaltiesAmt}}</td>
-        </tr>
-        <tr>
-          <td>Dinner penalties</td>
-          <td>{{dinnerPenalties}}</td>
-        </tr>
-        <tr>
-          <td>Dinner penalty amount</td>
-          <td>{{dinnerPenaltiesAmt}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <tr>
-          <td>total # of hours worked</td>
-          <td>{{hrsWorked | number: '1.1-1'}}</td>
-        </tr>
-        <tr>
-          <td># of overtime hours</td>
-          <td>{{overtimeHrs | number: '1.1-1'}}</td>
-        </tr>
-        <tr>
-          <td>OT1 rate (hrs 8-10)</td>
-          <td>${{overtimeRate1 | number: '1.2-2'}}/hr</td>
-        </tr>
-        <tr>
-          <td>OT2 rate (hrs 10+)</td>
-          <td>${{overtimeRate2 | number: '1.2-2'}}/hr</td>
-        </tr>
-        <tr>
-          <td>Total overtime pay</td>
-          <td>${{overtimePay | number: '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <td>"Golden time" bonus (after 16 total hrs)</td>
-          <td>${{goldenRate | number: '1.2-2'}}/hr </td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <tbody>
-        <th>Night Premium values</th>
-        <tr>
-          <td>Work hr number @ 8pm</td>
-          <td>{{night1TriggerNum}}</td>
-        </tr>
-        <tr>
-          <td>Night premium 1 triggered?</td>
-          <td>{{night1Trigger}}</td>
-        </tr>
-        <tr>
-          <td>N1 hrs @ base rate</td>
-          <td>{{baseN1Hrs}}</td>
-        </tr>
-        <tr>
-          <td>Total from night premium 1</td>
-          <td>${{totalNight1Amt}}</td>
-        </tr>
-        <tr>
-          <td>Work hr number @ 1am</td>
-          <td>{{night2TriggerNum}}</td>
-        </tr>
-        <tr>
-          <td>Night premium 2 triggered?</td>
-          <td>{{night2Trigger}}</td>
-        </tr>
-        <tr>
-          <td>Total from night premium 2</td>
-          <td>${{totalNight2Amt}}</td>
-        </tr>
         <tr>
           <td>Total from night premiums</td>
-          <td>${{totalNightPremiumsAmt}}</td>
+          <td>${{totalNightPremiumsAmt | number: '1.2-2'}}</td>
         </tr>
       </tbody>
     </table>
@@ -293,7 +405,3 @@
     </table>
   </div>
 </div>
-<h3>To do</h3>
-<p>
-  Bumps, Meal penalties, Night premium adjustments
-</p>
