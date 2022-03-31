@@ -194,10 +194,22 @@ export class FormComponent implements OnInit {
     // console.log(this.ndbStartNum)
     // console.log(this.ndbEndNum)
     console.log('lunchExpectedStart = ' + lunchExpectedStart)
+    // // edge case, if lunch expected to start at midnight or later
+    // if (lunchExpectedStart >= 24) {
+      //   lunchExpectedStart -= 24
+      // }
+    
+    // edge case, if lunch starts at midnight or later
+      if (this.lunchStartNum < 6) {
+        this.lunchStartNum += 24
+      }
     console.log('lunchStartNum = ' + this.lunchStartNum)
-    if (lunchExpectedStart >= 24) {
+
+    // edge case, where end time is after midnight and no lunch is provided
+    if (!this.lunchStartNum && this.endTimeNum <= 6) {
       lunchExpectedStart -= 24
     }
+
     // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
     if ((this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
         (!this.lunchStartNum && this.endTimeNum > lunchExpectedStart)) {
@@ -230,7 +242,13 @@ export class FormComponent implements OnInit {
       dinnerExpectedStart = null
     }
 
-    console.log(dinnerExpectedStart)
+    console.log('dinner expected start time: ' + dinnerExpectedStart)
+    // adjust dinnerStartNum if dinnerStartNum is after midnight and before 6am (edge case)
+    if (this.dinnerStartNum < 6) {
+      this.dinnerStartNum += 24
+    }
+
+    console.log('dinner start time: ' + this.dinnerStartNum)
     // if there is an expected start time, and there was in fact a dinner break and that break started late...
     // OR if there was an expected start time, but there was no actual dinner break, and the end time was after the expected dinner break...
     if ((dinnerExpectedStart && this.dinnerStartNum && this.dinnerStartNum > dinnerExpectedStart) || 
@@ -259,7 +277,7 @@ export class FormComponent implements OnInit {
 
   calcHrs(): void {
     this.convertMealsToNum()
-    if (this.startTimeNum && this.endTimeNum) { // if start and end time values are valid, then calculate hours
+    if (this.startTimeNum >= 0 && this.endTimeNum >= 0) { // if start and end time values are valid, then calculate hours
       this.lunchLength = this.lunchEndNum - this.lunchStartNum || 0
       if (this.lunchLength > 0 && (this.lunchLength > 1 || this.lunchLength < 0.5)) {
         console.log('Meal breaks must be either one-half hour or one hour long.');
@@ -276,6 +294,7 @@ export class FormComponent implements OnInit {
       }
       // console.log(this.totalHrs)
       this.hrsWorked = this.totalHrs - this.lunchLength - this.dinnerLength
+      this.calcOTTriggerNums()
     }
   }
 
@@ -331,33 +350,42 @@ export class FormComponent implements OnInit {
     this.otherBumps ? this.totalBumps += this.otherBumps : null
   }
 
-  calcOTTriggerNums(): void {
+  private calcOTTriggerNums(): void {
+    // OT 1 triggers 8 work hrs after start time
     this.ot1TriggerTimeNum = this.startTimeNum + 8
     if (this.lunchLength && this.lunchPenalties < 4) {
       this.ot1TriggerTimeNum += this.lunchLength
     }
+    // edge case where lunch and dinner both start before 8 hours of work have elapsed
     if (this.lunchLength && this.dinnerLength && this.dinnerStartNum < this.startTimeNum + 8 + this.lunchLength) {
       this.ot1TriggerTimeNum += this.dinnerLength
     }
+    // OT 2 triggers 10 work hours after start time
     this.ot2TriggerTimeNum = this.startTimeNum + 10
     if (this.lunchLength && this.lunchPenalties < 8) {
       this.ot2TriggerTimeNum += this.lunchLength
     }
+    // edge case where lunch and dinner both start before 10 hours of work have elapsed
+    if (this.lunchLength && this.dinnerLength && this.dinnerStartNum < this.startTimeNum + 10 + this.lunchLength) {
+      this.ot2TriggerTimeNum += this.dinnerLength
+    }
 
   }
 
-  calcNightPremiums(): void {
+  private calcNightPremiums(): void {
     // determine if night premium 1 bonuses apply:
     if (this.endTimeNum > 20 || this.endTimeNum < this.startTimeNum) { // is end time after 8pm or after midnight
       this.night1Trigger = true
     }
     if(this.night1Trigger) {
       this.totalNight1Hrs = this.endTimeNum - 20 // end time - 8pm
+      this.totalNight1Hrs <= 0 ? this.totalNight1Hrs += 24 : null
       if (this.totalNight1Hrs > 5) { // can't be more than 5 hours
         this.totalNight1Hrs = 5
       }
     }
-    // need to know when OT1 triggers, when OT2 triggers, and also hoursWorkedAt8pm and hoursWorkedAt1am
+    // need to know hoursWorkedAt8pm and hoursWorkedAt1am
+
   }
 
   calculate(): void {

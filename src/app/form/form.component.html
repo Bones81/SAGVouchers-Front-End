@@ -161,14 +161,14 @@
           <tr>
             <td>Clock-in time</td>
             <td>{{startTime}}</td>
-            <td>total # of hours worked</td>
-            <td>{{hrsWorked | number: '1.1-1'}}</td>
+            <td>OT1 triggers at</td>
+            <td>{{ot1TriggerTimeNum}}</td>
           </tr>
           <tr>
             <td>Clock-out time</td>
             <td>{{endTime}}</td>
-            <td># of overtime hours</td>
-            <td>{{overtimeHrs | number: '1.1-1'}}</td>
+            <td>OT2 triggers at</td>
+            <td>{{ot2TriggerTimeNum}}</td>
           </tr>
           <tr>
             <td>Lunch start time</td>
@@ -181,10 +181,14 @@
           <tr>
             <td>Dinner start time</td>
             <td>{{dinnerStart}}</td>
+            <td>total # of hours worked</td>
+            <td>{{hrsWorked | number: '1.1-1'}}</td>
           </tr>
           <tr>
             <td>Dinner end time</td>
             <td>{{dinnerEnd}}</td>
+            <td># of overtime hours</td>
+            <td>{{overtimeHrs | number: '1.1-1'}}</td>
           </tr>
         </tbody>
       </table>
