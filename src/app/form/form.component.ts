@@ -415,7 +415,7 @@ export class FormComponent implements OnInit {
         hoursWorkedAfter8pm -= dinnerSegmentToSubtract
       }
       //if entire dinner is before 8pm, no dinner hours should be subtracted from hoursWorkedAfter8pm
-      console.log(hoursWorkedAfter8pm)
+      console.log(`hoursWorkedAfter8pm = ${hoursWorkedAfter8pm}`)
     } 
     return hoursWorkedAfter8pm
   } 
@@ -696,7 +696,7 @@ export class FormComponent implements OnInit {
     // IF NIGHT PREMIUM 2 STARTS WHILE UNDER BASE RATE // 
     if (this.night2Trigger && this.hoursWorkedAt1am < 8) { // if night premium 2 starts before 8 work hours have passed, baseN2 rate applies
       //determine # of baseN2Hrs to receive baseN2Rate
-      let hrsUntilOT1Triggers = this.ot1TriggerTimeNum - 20 // how many hours (on or off the clock) until OT1 kicks in
+      let hrsUntilOT1Triggers = this.ot1TriggerTimeNum - 25 // how many hours (on or off the clock) until OT1 kicks in
       // let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20 // how many hours (on or off the clock) until OT2 kicks in
       if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N2 hrs...
         this.baseN2Hrs = this.totalNight2Hrs // all N2 hrs should be given baseN2Rate. Night meals already accounted for above
@@ -862,8 +862,8 @@ export class FormComponent implements OnInit {
 
     this.calcNightPremiums()
     
-    this.totalWages = this.basePay + this.overtimePay // total, taking into account work category and overtime hours, but not considering night premium or other bumps/penalties
+    this.totalWages = this.basePay + this.overtimePay + this.totalNightPremiumsAmt// total, taking into account work category, overtime hours, and night premiums, but not considering bumps/penalties
 
-    this.totalPay = this.totalWages + this.totalBumps + this.totalPenalties + this.totalNightPremiumsAmt
+    this.totalPay = this.totalWages + this.totalBumps + this.totalPenalties 
   }
 }
