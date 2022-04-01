@@ -442,8 +442,9 @@ export class FormComponent implements OnInit {
   }
 
   private calcNightPremiums(): void {
+    // NIGHT PREMIUM 1 SECTION
     // determine if night premium 1 bonuses apply:
-    if (this.endTimeNum > 20) { // is end time after 8pm or after midnight?
+    if (this.endTimeNum > 20) { // is end time after 8pm?
       this.night1Trigger = true
     }
     if(this.night1Trigger) {
@@ -483,10 +484,10 @@ export class FormComponent implements OnInit {
     // IF NIGHT PREMIUM 1 STARTS WHILE EARNING BASE RATE // 
     if (this.hoursWorkedAt8pm < 8) { // if night premium 1 starts before 8 work hours have passed, baseN1 rate applies
       //determine # of baseN1Hrs to receive baseN1Rate
-      let hrsUntilOT1Triggers = 8 - this.hoursWorkedAt8pm // how many hours until OT1 kicks in
-      if (hrsUntilOT1Triggers >= this.totalNight1Hrs) { // if base rate-applicable hrs are entirely within N1 hrs...
+      let hrsUntilOT1Triggers = this.ot1TriggerTimeNum - 20 // how many hours (on or off the clock) until OT1 kicks in
+      if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N1 hrs...
         this.baseN1Hrs = this.totalNight1Hrs // all N1 hrs should be given baseN1Rate. Night meals already accounted for above
-      } else if (hrsUntilOT1Triggers < this.totalNight1Hrs) { // if OT1 kicks in at some point during N1
+      } else { // if OT1 kicks in at some point during N1
         // determine # of baseN1Hrs to receive baseN1Rate
         this.baseN1Hrs = hrsUntilOT1Triggers // num hrs (initially) to receive baseN1Rate
         this.ot1N1Hrs = this.totalNight1Hrs - hrsUntilOT1Triggers
@@ -511,8 +512,6 @@ export class FormComponent implements OnInit {
             this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs - lunchSegmentToSubtract
           }
         }
-        //
-
       }
     // IF NIGHT PREMIUM 1 STARTS WHILE EARNING OT1 RATE
     } else if (this.hoursWorkedAt8pm >= 8 && this.hoursWorkedAt8pm < 10) { // N1 hrs start during OT1
@@ -531,6 +530,7 @@ export class FormComponent implements OnInit {
     //Then add amts to get N1 totals
     this.totalNight1Amt = this.baseN1Amt + this.ot1N1Amt + this.ot2N1Amt
 
+    // NIGHT PREMIUM 2 SECTION
     // DO THE SAME PROCESS FOR NIGHT PREMIUM 2 SCENARIOS!!!!! //
     // need to know hoursWorkedAt1am
     let hoursWorkedAfter1am = this.calcHrsAfter1am()
