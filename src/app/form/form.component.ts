@@ -362,7 +362,7 @@ export class FormComponent implements OnInit {
   private calcOTTriggerNums(): void {
     // OT 1 triggers 8 work hrs after start time
     this.ot1TriggerTimeNum = this.startTimeNum + 8
-    if (this.lunchLength && this.lunchPenalties < 4) {
+    if (this.lunchLength && this.lunchPenalties < 4) { // if lunch occurred before OT1 triggered
       this.ot1TriggerTimeNum += this.lunchLength
     }
     // edge case where lunch and dinner both start before 8 hours of work have elapsed
@@ -371,7 +371,7 @@ export class FormComponent implements OnInit {
     }
     // OT 2 triggers 10 work hours after start time
     this.ot2TriggerTimeNum = this.startTimeNum + 10
-    if (this.lunchLength && this.lunchPenalties < 8) {
+    if (this.lunchLength && this.lunchPenalties < 8) { // if lunch occurred before OT2 triggered
       this.ot2TriggerTimeNum += this.lunchLength
     }
     // edge case where lunch and dinner both start before 10 hours of work have elapsed
@@ -482,7 +482,7 @@ export class FormComponent implements OnInit {
 
     // possible rate/hour breakdowns:
     // IF NIGHT PREMIUM 1 STARTS WHILE EARNING BASE RATE // 
-    if (this.hoursWorkedAt8pm < 8) { // if night premium 1 starts before 8 work hours have passed, baseN1 rate applies
+    if (this.night1Trigger && this.hoursWorkedAt8pm < 8) { // if night premium 1 starts before 8 work hours have passed, baseN1 rate applies
       //determine # of baseN1Hrs to receive baseN1Rate
       let hrsUntilOT1Triggers = this.ot1TriggerTimeNum - 20 // how many hours (on or off the clock) until OT1 kicks in
       if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N1 hrs...
@@ -514,11 +514,14 @@ export class FormComponent implements OnInit {
         }
       }
     // IF NIGHT PREMIUM 1 STARTS WHILE EARNING OT1 RATE
-    } else if (this.hoursWorkedAt8pm >= 8 && this.hoursWorkedAt8pm < 10) { // N1 hrs start during OT1
+    } else if (this.night1Trigger && this.hoursWorkedAt8pm >= 8 && this.hoursWorkedAt8pm < 10) { // N1 hrs start during OT1
+      this.baseN1Hrs = 0
       // determine # of ot1N1Hrs to receive ot1N1Rate
       // OT1 stuff happens
     // IF NIGHT PREMIUM 1 STARTS WHILE EARNING OT2 RATE
-    } else if (this.hoursWorkedAt8pm >=10) { // N1 hrs start during OT2
+    } else if (this.night1Trigger && this.hoursWorkedAt8pm >=10) { // N1 hrs start during OT2
+      this.baseN1Hrs = 0
+      this.ot1N1Hrs = 0
       // OT2 stuff happens
     }
 
@@ -532,10 +535,44 @@ export class FormComponent implements OnInit {
 
     // NIGHT PREMIUM 2 SECTION
     // DO THE SAME PROCESS FOR NIGHT PREMIUM 2 SCENARIOS!!!!! //
+    // determine if night premium 1 bonuses apply:
+    if (this.endTimeNum > 25) { // is end time after 1am?
+      this.night2Trigger = true
+    }
+    if(this.night2Trigger) {
+      this.totalNight2Hrs = this.endTimeNum - 25 // end time - 1am
+      if (this.totalNight2Hrs > 5) { // can't be more than 5 hours
+        this.totalNight2Hrs = 5
+      }
+    }
     // need to know hoursWorkedAt1am
     let hoursWorkedAfter1am = this.calcHrsAfter1am()
     this.hoursWorkedAt1am = this.hrsWorked - hoursWorkedAfter1am
     console.log('hoursWorkedAt1am: ' + this.hoursWorkedAt1am)
+
+    let night2MealHrs = 0
+
+    // did any meals occur during the night premium 2 hours:
+    // only 1 meal is ever likely to occur during this time frame 1am - 6pm
+    if (this.lunchStartNum >= 25 && this.lunchEndNum < 30) { // if entire lunch occurs during night 2 hrs
+      night2MealHrs = this.lunchLength
+    } else if (this.lunchStartNum >= 25 && this.lunchStartNum < 30) { // else if lunch starts during night 2 hrs and ends at 6am or later
+      night2MealHrs = 30 - this.lunchStartNum
+    } else if (this.lunchEndNum > 25 && this.lunchEndNum <= 30) { // else if lunch starts before night 2 hrs and ends during night 2 hrs
+      night2MealHrs = this.lunchEndNum - 25
+    }
+    if (this.dinnerStartNum >= 25 && this.dinnerEndNum < 30) { // if entire dinner occurs during night 2 hrs
+      night2MealHrs = this.dinnerLength
+    } else if (this.dinnerStartNum >= 25 && this.dinnerStartNum < 30) { // else if dinner starts during night 2 hrs and ends at 6am or later
+      night2MealHrs = 30 - this.dinnerStartNum
+    } else if (this.dinnerEndNum > 25 && this.dinnerEndNum <= 30) { // else if dinner starts before night 2 hrs and ends during night 2 hrs
+      night2MealHrs = this.dinnerEndNum - 25
+    }
+
+    // adjust total night 2 hrs accordingly:
+    this.totalNight2Hrs -= night2MealHrs
+
+    //FILL IN WITH THE SAME TYPE OF LOGIC AS IN THE NIGHT PREMIUM 1 SECTION
 
     // AFTER ALL OF THAT, Multiply appropriate hours by appropriate rates
     this.baseN2Amt = this.baseN2Hrs * this.baseN2Rate
