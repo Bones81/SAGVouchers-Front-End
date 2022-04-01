@@ -481,47 +481,105 @@ export class FormComponent implements OnInit {
     this.totalNight1Hrs -= night1MealHrs
 
     // possible rate/hour breakdowns:
-    // IF NIGHT PREMIUM 1 STARTS WHILE EARNING BASE RATE // 
+    // IF NIGHT PREMIUM 1 STARTS WHILE UNDER BASE RATE // 
     if (this.night1Trigger && this.hoursWorkedAt8pm < 8) { // if night premium 1 starts before 8 work hours have passed, baseN1 rate applies
       //determine # of baseN1Hrs to receive baseN1Rate
       let hrsUntilOT1Triggers = this.ot1TriggerTimeNum - 20 // how many hours (on or off the clock) until OT1 kicks in
+      let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20 // how many hours (on or off the clock) until OT2 kicks in
       if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N1 hrs...
         this.baseN1Hrs = this.totalNight1Hrs // all N1 hrs should be given baseN1Rate. Night meals already accounted for above
       } else { // if OT1 kicks in at some point during N1
         // determine # of baseN1Hrs to receive baseN1Rate
         this.baseN1Hrs = hrsUntilOT1Triggers // num hrs (initially) to receive baseN1Rate
-        this.ot1N1Hrs = this.totalNight1Hrs - hrsUntilOT1Triggers
+        this.ot1N1Hrs = this.totalNight1Hrs - hrsUntilOT1Triggers // num hrs (initially) to receive ot1N1Rate
+        if (this.ot1N1Hrs > 2) { // ot1 lasts at most 2 hours, so...
+          this.ot2N1Hrs = this.ot1N1Hrs - 2 // assign any hours over 2 to ot2N1Hrs
+          this.ot1N1Hrs = 2 // assign ot1 the max hrs of 2
+        } else {
+          this.ot2N1Hrs = 0 // ot2 never triggered
+        }
+        
         // handle meal scenarios
         if (night1MealHrs) { // if a meal occurred during night1 hrs:
           // determine num hrs the meal cut into baseN1Hrs and how much it cut into ot1N1Hrs
-          if (this.lunchStartNum >= 20 && this.ot1TriggerTimeNum > this.lunchEndNum) { // if lunch occurred entirely within baseN1Hrs, subtract lunchLength from baseN1Hrs
+          if (this.lunchStartNum >= 20 && this.ot1TriggerTimeNum >= this.lunchEndNum) { // if lunch occurred entirely within baseN1Hrs, subtract lunchLength from baseN1Hrs
             this.baseN1Hrs -= this.lunchLength
             this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs
-          } else if (this.lunchStartNum < 20 && this.lunchEndNum >= 20 && this.ot1TriggerTimeNum > this.lunchEndNum) { // only part of lunch occurred during N1 hrs and all of that part occurred before OT1 triggered
+          } else if (this.lunchStartNum < 20 && this.lunchEndNum >= 20 && this.ot1TriggerTimeNum >= this.lunchEndNum) { // only part of lunch occurred during N1 hrs and all of that part occurred before OT1 triggered
             let lunchSegmentToSubtract = this.lunchEndNum - 20
             this.baseN1Hrs -= lunchSegmentToSubtract // subtract the portion of lunch that occurred after 8pm
             this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs
-          } else if (this.lunchStartNum >= 20 && this.lunchStartNum < this.ot1TriggerTimeNum && this.ot1TriggerTimeNum < this.lunchEndNum) { // lunch starts after 8pm, before OT1 triggers, and ends after OT1 triggers
-            let lunchSegment1ToSubtract = this.ot1TriggerTimeNum - this.lunchStartNum
-            this.baseN1Hrs -= lunchSegment1ToSubtract // subtract portion of lunch that occurred before OT1 triggered
-            let lunchSegment2ToSubtract = this.lunchEndNum - this.ot1TriggerTimeNum
-            this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs - lunchSegment2ToSubtract
-          } else if (this.lunchStartNum < 20 && this.lunchEndNum > 20 && this.ot1TriggerTimeNum < this.lunchEndNum) { // lunch starts before 8, OT1 triggers before lunch ends
-            this.baseN1Hrs = this.ot1TriggerTimeNum - 20
-            let lunchSegmentToSubtract = this.lunchEndNum - this.ot1TriggerTimeNum
-            this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs - lunchSegmentToSubtract
-          }
+          } else if (this.lunchStartNum >= 20 && this.lunchStartNum > this.ot1TriggerTimeNum && this.lunchEndNum <= 25) { // if entire lunch occurs after ot1TriggerTimeNum, no adjustment should be necessary
+            console.log(`${this.totalNight1Hrs} = ${this.baseN1Hrs} + ${this.ot1N1Hrs} should be true.`)
+          } else if (this.lunchStartNum >= 20 && this.lunchStartNum > this.ot1TriggerTimeNum && this.lunchEndNum > 25) { // if lunch is after ot1TriggerTimeNum but also goes past 1am, make sure totalN1Hrs is correct. 
+            console.log(`${this.totalNight1Hrs} = ${this.baseN1Hrs} + ${this.ot1N1Hrs} should be true.`)
+          } 
+
+          //run same logic for subtracting dinner hrs from N1 hrs
+          if (this.dinnerStartNum >= 20 && this.ot1TriggerTimeNum > this.dinnerEndNum) { // if dinner occurred entirely within baseN1Hrs, subtract dinnerLength from baseN1Hrs
+            this.baseN1Hrs -= this.dinnerLength
+            this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs
+          } else if (this.dinnerStartNum < 20 && this.dinnerEndNum >= 20 && this.ot1TriggerTimeNum > this.dinnerEndNum) { // only part of dinner occurred during N1 hrs and all of that part occurred before OT1 triggered
+            let dinnerSegmentToSubtract = this.dinnerEndNum - 20
+            this.baseN1Hrs -= dinnerSegmentToSubtract // subtract the portion of dinner that occurred after 8pm
+            this.ot1N1Hrs = this.totalNight1Hrs - this.baseN1Hrs
+          } else if (this.dinnerStartNum >= 20 && this.dinnerStartNum > this.ot1TriggerTimeNum && this.dinnerEndNum <= 25) { // if entire dinner occurs after ot1TriggerTimeNum, no adjustment should be necessary
+            console.log(`${this.totalNight1Hrs} = ${this.baseN1Hrs} + ${this.ot1N1Hrs} should be true.`)
+          } else if (this.dinnerStartNum >= 20 && this.dinnerStartNum > this.ot1TriggerTimeNum && this.dinnerEndNum > 25) { // if dinner is after ot1TriggerTimeNum but also goes past 1am, make sure totalN1Hrs is correct. 
+            console.log(`${this.totalNight1Hrs} = ${this.baseN1Hrs} + ${this.ot1N1Hrs} should be true.`)
+          } 
+
         }
       }
-    // IF NIGHT PREMIUM 1 STARTS WHILE EARNING OT1 RATE
+    // IF NIGHT PREMIUM 1 STARTS WHILE UNDER OT1 RATE
     } else if (this.night1Trigger && this.hoursWorkedAt8pm >= 8 && this.hoursWorkedAt8pm < 10) { // N1 hrs start during OT1
+      //this means no N1 hrs occurred under the base rate
       this.baseN1Hrs = 0
       // determine # of ot1N1Hrs to receive ot1N1Rate
-      // OT1 stuff happens
-    // IF NIGHT PREMIUM 1 STARTS WHILE EARNING OT2 RATE
+      let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20
+      if (hrsUntilOT2Triggers >= 5) { // if OT1-applicable hrs are entirely within N1 hrs...
+        this.ot1N1Hrs = this.totalNight1Hrs // all N1 hrs should be given ot1N1Rate. Night meals already accounted for above
+      } else { // if OT2 kicks in at some point during N1
+      // determine # of ot1N1Hrs to receive ot1N1Rate
+      this.ot1N1Hrs = hrsUntilOT2Triggers // num hrs (initially) to receive ot1N1Rate
+      this.ot2N1Hrs = this.totalNight1Hrs - hrsUntilOT2Triggers // num hrs (initially) to receive ot2N1Rate
+      // handle meal scenarios
+        if (night1MealHrs) { // if a meal occurred during night1 hrs:
+          // determine num hrs the meal cut into ot1N1Hrs and how much it cut into ot2N1Hrs
+          if (this.lunchStartNum >= 20 && this.ot2TriggerTimeNum > this.lunchEndNum) { // if lunch occurred entirely within ot1N1Hrs, subtract lunchLength from ot1N1Hrs
+            this.ot1N1Hrs -= this.lunchLength
+            this.ot2N1Hrs = this.totalNight1Hrs - this.ot1N1Hrs
+          } else if (this.lunchStartNum < 20 && this.lunchEndNum >= 20 && this.ot2TriggerTimeNum > this.lunchEndNum) { // only part of lunch occurred during N1 hrs and all of that part occurred before ot2 triggered
+            let lunchSegmentToSubtract = this.lunchEndNum - 20
+            this.ot1N1Hrs -= lunchSegmentToSubtract // subtract the portion of lunch that occurred after 8pm
+            this.ot2N1Hrs = this.totalNight1Hrs - this.ot1N1Hrs
+          } else if (this.lunchStartNum >= 20 && this.lunchStartNum > this.ot2TriggerTimeNum && this.lunchEndNum <= 25) { // if entire lunch occurs after ot2TriggerTimeNum, no adjustment should be necessary
+            console.log(`${this.totalNight1Hrs} = ${this.ot1N1Hrs} + ${this.ot2N1Hrs} should be true.`)
+          } else if (this.lunchStartNum >= 20 && this.lunchStartNum > this.ot2TriggerTimeNum && this.lunchEndNum > 25) { // if lunch is after ot2TriggerTimeNum but also goes past 1am, make sure totalN1Hrs is correct. 
+            console.log(`${this.totalNight1Hrs} = ${this.ot1N1Hrs} + ${this.ot2N1Hrs} should be true.`)
+          } 
+
+          // run the same logic for subtracting dinner hrs from N1 hrs
+          if (this.dinnerStartNum >= 20 && this.ot2TriggerTimeNum > this.dinnerEndNum) { // if dinner occurred entirely within ot1N1Hrs, subtract dinnerLength from ot1N1Hrs
+            this.ot1N1Hrs -= this.dinnerLength
+            this.ot2N1Hrs = this.totalNight1Hrs - this.ot1N1Hrs
+          } else if (this.dinnerStartNum < 20 && this.dinnerEndNum >= 20 && this.ot2TriggerTimeNum > this.dinnerEndNum) { // only part of dinner occurred during N1 hrs and all of that part occurred before ot2 triggered
+            let dinnerSegmentToSubtract = this.dinnerEndNum - 20
+            this.ot1N1Hrs -= dinnerSegmentToSubtract // subtract the portion of dinner that occurred after 8pm
+            this.ot2N1Hrs = this.totalNight1Hrs - this.ot1N1Hrs
+          } else if (this.dinnerStartNum >= 20 && this.dinnerStartNum > this.ot2TriggerTimeNum && this.dinnerEndNum <= 25) { // if entire dinner occurs after ot2TriggerTimeNum, no adjustment should be necessary
+            console.log(`${this.totalNight1Hrs} = ${this.ot1N1Hrs} + ${this.ot2N1Hrs} should be true.`)
+          } else if (this.dinnerStartNum >= 20 && this.dinnerStartNum > this.ot2TriggerTimeNum && this.dinnerEndNum > 25) { // if dinner is after ot2TriggerTimeNum but also goes past 1am, make sure totalN1Hrs is correct. 
+            console.log(`${this.totalNight1Hrs} = ${this.ot1N1Hrs} + ${this.ot2N1Hrs} should be true.`)
+          } 
+
+        }
+      }
+    // IF NIGHT PREMIUM 1 STARTS WHILE UNDER OT2 RATE
     } else if (this.night1Trigger && this.hoursWorkedAt8pm >=10) { // N1 hrs start during OT2
       this.baseN1Hrs = 0
       this.ot1N1Hrs = 0
+      this.ot2N1Hrs = this.totalNight1Hrs // all N1 hrs get the OT2 Rate in this scenario, meal deduction already accounted for in totalNight1Hrs logic
       // OT2 stuff happens
     }
 
@@ -572,7 +630,7 @@ export class FormComponent implements OnInit {
     // adjust total night 2 hrs accordingly:
     this.totalNight2Hrs -= night2MealHrs
 
-    //FILL IN WITH THE SAME TYPE OF LOGIC AS IN THE NIGHT PREMIUM 1 SECTION
+    // FILL IN WITH THE SAME TYPE OF LOGIC AS IN THE NIGHT PREMIUM 1 SECTION
 
     // AFTER ALL OF THAT, Multiply appropriate hours by appropriate rates
     this.baseN2Amt = this.baseN2Hrs * this.baseN2Rate
@@ -634,6 +692,6 @@ export class FormComponent implements OnInit {
     
     this.totalWages = this.basePay + this.overtimePay // total, taking into account work category and overtime hours, but not considering night premium or other bumps/penalties
 
-    this.totalPay = this.totalWages + this.totalBumps + this.totalPenalties
+    this.totalPay = this.totalWages + this.totalBumps + this.totalPenalties + this.totalNightPremiumsAmt
   }
 }
