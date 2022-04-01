@@ -173,22 +173,25 @@
           <tr>
             <td>Lunch start time</td>
             <td>{{lunchStart}}</td>
+
           </tr>
           <tr>
             <td>Lunch end time</td>
             <td>{{lunchEnd}}</td>
+            <td>Total Hrs called</td>
+            <td>{{totalHrs | number: '1.1-1'}}</td>
           </tr>
           <tr>
             <td>Dinner start time</td>
             <td>{{dinnerStart}}</td>
-            <td>total # of hours worked</td>
-            <td>{{hrsWorked | number: '1.1-1'}}</td>
+            <td>Golden hours</td>
+            <td>{{goldenPay / goldenRate}}</td>
           </tr>
           <tr>
             <td>Dinner end time</td>
             <td>{{dinnerEnd}}</td>
-            <td># of overtime hours</td>
-            <td>{{overtimeHrs | number: '1.1-1'}}</td>
+            <td>Golden Pay</td>
+            <td>${{goldenPay | number: '1.2-2'}}</td>
           </tr>
         </tbody>
       </table>
@@ -400,6 +403,10 @@
         <tr>
           <td>Total meal penalties</td>
           <td>${{totalPenalties | number: '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td>"Golden time" pay</td>
+          <td>${{goldenPay | number: '1.2-2'}}</td>
         </tr>
         <tr>
           <td>Total pay (Total wages + bumps/penalties) </td>

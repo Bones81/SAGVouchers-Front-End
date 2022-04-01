@@ -23,6 +23,7 @@ export class FormComponent implements OnInit {
   ot2TriggerTimeNum: number = 0 // numerical representation of when OT 2 rate triggers
   goldenTrigger: boolean = false // true when golden time triggers
   goldenTriggerTimeNum: number = 0 // numerical representation of when golden time bonus triggers
+  goldenPay: number = 0 // total amt earned from Golden time bonus
   lunchStart: string = '' // time lunch break started
   lunchStartNum: number = 0 // numerical representation of lunchStart
   lunchEnd: string = '' // time lunch break ended
@@ -298,10 +299,6 @@ export class FormComponent implements OnInit {
       }
       // console.log(this.lunchLength, this.dinnerLength)
       this.totalHrs = this.endTimeNum - this.startTimeNum
-      // if (this.totalHrs < 0) {
-      //   this.totalHrs += 24
-      // }
-      // console.log(this.totalHrs)
       this.hrsWorked = this.totalHrs - this.lunchLength - this.dinnerLength
       this.calcOTTriggerNums()
     }
@@ -357,6 +354,7 @@ export class FormComponent implements OnInit {
     this.tolls ? this.totalBumps += this.tolls : null
     this.hazardPay ? this.totalBumps += this.hazardPay : null
     this.otherBumps ? this.totalBumps += this.otherBumps : null
+
   }
 
   private calcOTTriggerNums(): void {
@@ -383,7 +381,15 @@ export class FormComponent implements OnInit {
     if (this.lunchLength && this.dinnerLength && this.dinnerStartNum < this.startTimeNum + 10 + this.lunchLength) {
       this.ot2TriggerTimeNum += this.dinnerLength
     }
+  }
 
+  private calcGoldenAmt(): void { // every hour or portion thereof adds an entire day of pay
+    let goldenHrs = 0
+    if (this.totalHrs > 16) { 
+      goldenHrs = Math.ceil(this.totalHrs - 16)
+      console.log(`Golden hours = ${goldenHrs}`)
+    }
+    this.goldenPay = goldenHrs * this.goldenRate
   }
 
   private calcHrsAfter8pm(): number {
@@ -829,6 +835,7 @@ export class FormComponent implements OnInit {
       // console.log(`basePay: ${this.basePay}`)
       this.overtimeHrs = 0
       this.overtimePay = 0
+      this.goldenPay = 0
     } else if (this.hrsWorked > 8) { // worked more than 8 hrs
       this.overtimeHrs = parseFloat((Math.round((this.hrsWorked - 8) * 10) / 10).toFixed(1)) // calculate OT hrs and round to nearest tenth of an hour, ensure one decimal place, and convert a toFixed value (which is a string) into Float (which is a Number type and thus can be used in mathematical expressions)
       if (this.overtimeHrs <= 2) { // for first 2 hrs of OT
@@ -838,14 +845,15 @@ export class FormComponent implements OnInit {
         this.basePay = 8 * this.baseRate// earn base rate plus
         this.ot1Pay = this.overtimeHrs * this.overtimeRate1 // OT hrs at OT rate 1
         this.overtimePay = this.ot1Pay
+        this.goldenPay = 0
       } else if (this.overtimeHrs > 2) { // 8hrs at base rate, 2 hrs at OT rate 1, all remaining hrs at OT rate 2
-        // add logic for Golden Time scenario later
         this.basePay = 8 * this.baseRate // earn base pay plus
         this.ot1Hrs = 2
         this.ot1Pay = this.ot1Hrs * this.overtimeRate1
         this.ot2Hrs = this.overtimeHrs - 2
         this.ot2Pay = this.ot2Hrs * this.overtimeRate2
         this.overtimePay = this.ot1Pay + this.ot2Pay // OT pay calulation
+        this.calcGoldenAmt()
       }
     } else if (this.hrsWorked <= 0) {
       this.totalWages = 0
@@ -855,15 +863,17 @@ export class FormComponent implements OnInit {
       this.ot1Pay = 0
       this.ot2Pay = 0
       this.overtimePay = 0
+      this.goldenPay = 0
       this.totalWages = this.basePay + this.overtimePay
 
       console.log('Please enter a number of hours greater than 0')
     }
 
     this.calcNightPremiums()
+  
     
-    this.totalWages = this.basePay + this.overtimePay + this.totalNightPremiumsAmt// total, taking into account work category, overtime hours, and night premiums, but not considering bumps/penalties
+    this.totalWages = this.basePay + this.overtimePay + this.totalNightPremiumsAmt // total, taking into account work category, overtime hours, and night premiums, but not considering bumps/penalties
 
-    this.totalPay = this.totalWages + this.totalBumps + this.totalPenalties 
+    this.totalPay = this.totalWages + this.totalBumps + this.totalPenalties + this.goldenPay
   }
 }
