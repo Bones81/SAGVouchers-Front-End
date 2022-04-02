@@ -1,3 +1,6 @@
 <h1>{{title}}</h1>
-<a *ngIf="showFormLink" (click)="toggleFormLink()" routerLink="form">Go to Form</a>
+<nav>
+  <a routerLink="">List All Vouchers</a>
+  <a routerLink="form">New Voucher</a>
+</nav>
 <router-outlet></router-outlet>
