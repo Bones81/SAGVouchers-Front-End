@@ -200,21 +200,8 @@ export class FormComponent implements OnInit {
     // console.log(this.ndbStartNum)
     // console.log(this.ndbEndNum)
     console.log('lunchExpectedStart = ' + lunchExpectedStart)
-    // // edge case, if lunch expected to start at midnight or later
-    // if (lunchExpectedStart >= 24) {
-      //   lunchExpectedStart -= 24
-      // }
-    
-    // edge case, if lunch starts at midnight or later
-      // if (this.lunchStartNum < 6) {
-      //   this.lunchStartNum += 24
-      // }
-    console.log('lunchStartNum = ' + this.lunchStartNum)
 
-    // edge case, where end time is after midnight and no lunch is provided
-    // if (!this.lunchStartNum && this.endTimeNum <= 6) {
-    //   lunchExpectedStart -= 24
-    // }
+    console.log('lunchStartNum = ' + this.lunchStartNum)
 
     // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
     if ((this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
@@ -249,15 +236,7 @@ export class FormComponent implements OnInit {
     }
 
     console.log('dinner expected start time: ' + dinnerExpectedStart)
-    // // adjust dinnerStartNum if dinnerStartNum is after midnight and before 6am (edge case)
-    // if (this.dinnerStartNum < 6) {
-    //   this.dinnerStartNum += 24
-    // }
 
-    // case where end time is after midnight, dinner is expected, but no dinner is provided: adjust dinnerExpectedStart so that calculations will run better
-    // if (dinnerExpectedStart && !this.dinnerStartNum && this.endTimeNum <= 6) {
-    //   dinnerExpectedStart -= 24
-    // }
 
     console.log('dinner start time: ' + this.dinnerStartNum)
     // if there is an expected start time, and there was in fact a dinner break and that break started late...
@@ -465,7 +444,14 @@ export class FormComponent implements OnInit {
     // determine if night premium 1 bonuses apply:
     if (this.endTimeNum > 20) { // is end time after 8pm?
       this.night1Trigger = true
+    } else {
+      this.night1Trigger = false
+      this.totalNight1Hrs = 0
+      this.baseN1Hrs = 0
+      this.ot1N1Hrs = 0
+      this.ot2N1Hrs = 0
     }
+
     if(this.night1Trigger) {
       if (this.startTimeNum <= 20) {
         this.totalNight1Hrs = this.endTimeNum - 20 // end time - 8pm
@@ -482,7 +468,7 @@ export class FormComponent implements OnInit {
 
     // need to know hoursWorkedAt8pm
     let hoursWorkedAfter8pm = this.calcHrsAfter8pm()
-    this.hoursWorkedAt8pm = this.hrsWorked - hoursWorkedAfter8pm
+    this.night1Trigger ? this.hoursWorkedAt8pm = this.hrsWorked - hoursWorkedAfter8pm : null
     console.log('hoursWorkedAt8pm: ' + this.hoursWorkedAt8pm)
 
     let night1MealHrs = 0
@@ -645,7 +631,14 @@ export class FormComponent implements OnInit {
     // determine if night premium 1 bonuses apply:
     if (this.endTimeNum > 25) { // is end time after 1am?
       this.night2Trigger = true
+    } else {
+      this.night2Trigger = false
+      this.totalNight2Hrs = 0
+      this.baseN2Hrs = 0
+      this.ot1N2Hrs = 0
+      this.ot2N2Hrs = 0
     }
+
     if(this.night2Trigger) {
       if (this.startTimeNum <= 25) {
         this.totalNight2Hrs = this.endTimeNum - 25 // end time - 1am
@@ -661,7 +654,7 @@ export class FormComponent implements OnInit {
     }
     // need to know hoursWorkedAt1am
     let hoursWorkedAfter1am = this.calcHrsAfter1am()
-    this.hoursWorkedAt1am = this.hrsWorked - hoursWorkedAfter1am
+    this.night2Trigger ? this.hoursWorkedAt1am = this.hrsWorked - hoursWorkedAfter1am : null
     console.log('hoursWorkedAt1am: ' + this.hoursWorkedAt1am)
 
     let night2MealHrs = 0
@@ -703,7 +696,7 @@ export class FormComponent implements OnInit {
     if (this.night2Trigger && this.hoursWorkedAt1am < 8) { // if night premium 2 starts before 8 work hours have passed, baseN2 rate applies
       //determine # of baseN2Hrs to receive baseN2Rate
       let hrsUntilOT1Triggers = this.ot1TriggerTimeNum - 25 // how many hours (on or off the clock) until OT1 kicks in
-      // let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20 // how many hours (on or off the clock) until OT2 kicks in
+      // let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 25 // how many hours (on or off the clock) until OT2 kicks in
       if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N2 hrs...
         this.baseN2Hrs = this.totalNight2Hrs // all N2 hrs should be given baseN2Rate. Night meals already accounted for above
       } else { // if OT1 kicks in at some point during N2
@@ -843,7 +836,7 @@ export class FormComponent implements OnInit {
         this.ot2Hrs = 0
         this.ot2Pay = 0
         this.basePay = 8 * this.baseRate// earn base rate plus
-        this.ot1Pay = this.overtimeHrs * this.overtimeRate1 // OT hrs at OT rate 1
+        this.ot1Pay = this.ot1Hrs * this.overtimeRate1 // OT hrs at OT rate 1
         this.overtimePay = this.ot1Pay
         this.goldenPay = 0
       } else if (this.overtimeHrs > 2) { // 8hrs at base rate, 2 hrs at OT rate 1, all remaining hrs at OT rate 2
