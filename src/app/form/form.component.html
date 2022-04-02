@@ -1,6 +1,11 @@
 <div class="content-container">
   <div class="form-container">
-    <form >
+    <form>
+      <h3>Basics</h3>
+      <label for="actorName">Actor name: </label>
+      <input type="text" id="actorName" name="actorName" /><br/>
+      <label for="prodName">Production name: </label>
+      <input type="text" id="prodName" name="prodName" />
       <h3>Base Rate and modifiers</h3>
       <label for="bgType">Work Category: </label>
       <select name="bgType" id="bgType" [(ngModel)]="bgType" (ngModelChange)="calculate()">
