@@ -167,16 +167,47 @@ export class FormComponent implements OnInit {
     this.voucherService.getVoucher(id)
         .subscribe(voucher => {
           this.voucher2Edit = voucher
-          this.id = this.voucher2Edit._id
+          this.id = voucher._id
           console.log(`default id overwritten. Now editing voucher #${this.id}`)
+          this.date = voucher.date
+          this.actorName = voucher.actorName
+          this.prodName = voucher.prodName
+          this.bgType = voucher.bgType
+          this.wetPay = voucher.wetPay
+          this.smokePay = voucher.smokePay
+          this.hmu = voucher.hmu
+          this.startTime = voucher.startTime
+          this.endTime = voucher.endTime
+          this.ndbStart = voucher.ndbStart
+          this.lunchStart = voucher.lunchStart
+          this.lunchEnd = voucher.lunchEnd
+          this.dinnerStart = voucher.dinnerStart
+          this.dinnerEnd = voucher.dinnerEnd
+          this.numWardrobe = voucher.numWardrobe
+          this.formalWear = voucher.formalWear
+          this.policeWear = voucher.policeWear
+          this.pet = voucher.pet
+          this.golfClubs = voucher.golfClubs
+          this.tennisRacquet = voucher.tennisRacquet
+          this.luggage1 = voucher.luggage1
+          this.luggage2 = voucher.luggage2
+          this.camera = voucher.camera
+          this.skisPoles = voucher.skisPoles
+          this.otherPropsAmt = voucher.otherPropsAmt
+          this.car = voucher.car
+          this.trailer = voucher.trailer
+          this.bicycle = voucher.bicycle
+          this.moped = voucher.moped
+          this.motorcycle = voucher.motorcycle
+          this.policeMoto = voucher.policeMoto
+          this.skatesOrSkateboard = voucher.skatesOrSkateboard
+          this.hazardPay = voucher.hazardPay
+          this.otherBumps = voucher.otherBumps
+          this.mileage = voucher.mileage
+          this.tolls = voucher.tolls
 
-
-
-
-
-
-
-          
+          this.calculate()
+          this.buttonLabel = 'Update voucher info with these details'
         })
   }
   
@@ -187,7 +218,7 @@ export class FormComponent implements OnInit {
 
   addNewVoucher(): void {
 
-    const voucher2Add = {
+    const voucher2Submit = {
       _id: this.id,
       date: this.date,
       actorName: this.actorName,
@@ -229,8 +260,13 @@ export class FormComponent implements OnInit {
       totalPay: this.totalPay,
     }
     
-    // pass this voucher2Add to the voucherService
-    this.voucherService.addVoucher(voucher2Add as Voucher).subscribe()
+    // pass voucher2Submit to the appropriate voucherService
+    if (this.voucher2Edit) {
+      this.voucherService.updateVoucher(voucher2Submit as Voucher).subscribe()
+    } else {
+      this.voucherService.addVoucher(voucher2Submit as Voucher).subscribe()
+    }
+
     this.clearForm()
        
     // //get the next id
@@ -1028,9 +1064,9 @@ export class FormComponent implements OnInit {
   }
 
   calculate(): void {
-    this.getVoucher()
-    this.getVouchers()
-    this.voucher2Edit ? this.id = this.voucher2Edit._id : this.id = this.genId(this.vouchers)
+    // this.getVoucher()
+    // this.getVouchers()
+    // this.voucher2Edit ? this.id = this.voucher2Edit._id : this.id = this.genId(this.vouchers)
     console.log(`this voucher has id#: ${this.id}`)
     // this.voucher2Edit ? console.log(`Editing voucher #${this.voucher2Edit._id}`) : null
     this.calcHrs()
