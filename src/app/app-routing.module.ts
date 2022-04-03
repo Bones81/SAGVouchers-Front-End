@@ -7,6 +7,7 @@ import { FormComponent } from './form/form.component';
 const routes: Routes = [
   {path: '', redirectTo: '/vouchers', pathMatch: 'full'},
   {path: 'form', component: FormComponent},
+  {path: 'edit/:id', component: FormComponent},
   {path: 'voucher/:id', component: VoucherDetailComponent},
   {path: 'vouchers', component: AllVouchersComponent}
 ];

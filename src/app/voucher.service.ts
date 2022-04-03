@@ -46,7 +46,7 @@ export class VoucherService {
   getVoucher(id: number): Observable<Voucher> {
     const url = `${this.vouchersUrl}/${id}`
     return this.http.get<Voucher>(url).pipe(
-      tap(_ => console.log(`fetched voucher id =${id}`)),
+      tap(_ => console.log(`fetched voucher id=${id}`)),
       catchError(this.handleError<Voucher>(`getVoucher id=${id}`))
     )
   }

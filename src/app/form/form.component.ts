@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Voucher } from '../voucher';
 import { VoucherService } from '../voucher.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -8,6 +9,10 @@ import { VoucherService } from '../voucher.service';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
+  route: ActivatedRoute // variable for route service
+  router: Router // variable for router service
+  voucher2Edit: Voucher | null | undefined = null // variable for edited voucher if editing
+  buttonLabel = "Create Voucher Record with Current Info"
 
   bgType: string = '' // Type of BG work: general, special ability, or stand-in/photo double
   bgTypes: string[] = []
@@ -131,7 +136,10 @@ export class FormComponent implements OnInit {
   vouchers: Voucher[] = [] // variable to hold vouchers array
   id: number = 0 // id to be generated when this voucher record is created
 
-  constructor(private voucherService: VoucherService) { }
+  constructor(private voucherService: VoucherService, route: ActivatedRoute, router: Router) { 
+    this.route = route
+    this.router = router
+  }
 
   ngOnInit(): void {
     this.bgTypes = [
@@ -139,13 +147,37 @@ export class FormComponent implements OnInit {
       'special ability',
       'stand-in or photo double'
     ]
+
     this.getVouchers()
-    this.id = this.genId(this.vouchers)
+    this.getVoucher()
+    // this.id = this.genId(this.vouchers)
   }
 
   getVouchers(): void {
     this.voucherService.getVouchers()
-        .subscribe(vouchers => this.vouchers = vouchers)
+        .subscribe(vouchers => {
+          this.vouchers = vouchers
+          this.id = this.genId(this.vouchers)
+          console.log(`Generating id #${this.id}`)
+        })
+  }
+
+  getVoucher(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'))
+    this.voucherService.getVoucher(id)
+        .subscribe(voucher => {
+          this.voucher2Edit = voucher
+          this.id = this.voucher2Edit._id
+          console.log(`default id overwritten. Now editing voucher #${this.id}`)
+
+
+
+
+
+
+
+          
+        })
   }
   
   genId(vouchers: Voucher[]): number {
@@ -379,9 +411,9 @@ export class FormComponent implements OnInit {
     }
     // console.log(this.ndbStartNum)
     // console.log(this.ndbEndNum)
-    console.log('lunchExpectedStart = ' + lunchExpectedStart)
+    // console.log('lunchExpectedStart = ' + lunchExpectedStart)
 
-    console.log('lunchStartNum = ' + this.lunchStartNum)
+    // console.log('lunchStartNum = ' + this.lunchStartNum)
 
     // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
     if ((this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
@@ -415,10 +447,10 @@ export class FormComponent implements OnInit {
       dinnerExpectedStart = null
     }
 
-    console.log('dinner expected start time: ' + dinnerExpectedStart)
+    // console.log('dinner expected start time: ' + dinnerExpectedStart)
 
 
-    console.log('dinner start time: ' + this.dinnerStartNum)
+    // console.log('dinner start time: ' + this.dinnerStartNum)
     // if there is an expected start time, and there was in fact a dinner break and that break started late...
     // OR if there was an expected start time, but there was no actual dinner break, and the end time was after the expected dinner break...
     if ((dinnerExpectedStart && this.dinnerStartNum && this.dinnerStartNum > dinnerExpectedStart) || 
@@ -996,9 +1028,11 @@ export class FormComponent implements OnInit {
   }
 
   calculate(): void {
+    this.getVoucher()
     this.getVouchers()
-    this.id = this.genId(this.vouchers)
-    console.log(`generated id#: ${this.id}`)
+    this.voucher2Edit ? this.id = this.voucher2Edit._id : this.id = this.genId(this.vouchers)
+    console.log(`this voucher has id#: ${this.id}`)
+    // this.voucher2Edit ? console.log(`Editing voucher #${this.voucher2Edit._id}`) : null
     this.calcHrs()
     this.calcRates()
     this.calcMealPenalties()
