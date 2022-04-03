@@ -1023,7 +1023,7 @@ export class FormComponent implements OnInit {
       //this means no N2 hrs occurred under the base rate
       this.baseN2Hrs = 0
       // determine # of ot1N2Hrs to receive ot1N2Rate
-      let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20
+      let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 25
       if (this.totalNight2Hrs + night2MealHrs <= hrsUntilOT2Triggers) { // if all N2 hrs are OT1 hrs...
         this.ot1N2Hrs = this.totalNight2Hrs // all N2 hrs should be given ot1N2Rate. Night meals already accounted for above
         this.ot2N2Hrs = 0
