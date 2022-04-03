@@ -394,7 +394,7 @@ export class FormComponent implements OnInit {
   }
 
   redirect(): void {
-    window.location.replace('http://localhost:4200/')
+    window.location.replace('https://sag-voucher-front-end.herokuapp.com/')
   }
 
   calcBaseRate(): void {
