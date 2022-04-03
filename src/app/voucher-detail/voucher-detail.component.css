@@ -1,0 +1,12 @@
+ul {
+  list-style-type: none;
+  padding: 0 1em;
+}
+
+.btn-holder button {
+  padding: 1em 2em;
+  margin: 1em;
+  border-radius: 5px;
+  background-color: darkolivegreen;
+  font-size: 1em;
+}
