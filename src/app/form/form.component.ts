@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Voucher } from '../voucher';
+import { VoucherService } from '../voucher.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -6,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
+  route: ActivatedRoute // variable for route service
+  router: Router // variable for router service
+  voucher2Edit: Voucher | null | undefined = null // variable for edited voucher if editing
+  buttonLabel = "Create Voucher Record with Current Info"
+
   bgType: string = '' // Type of BG work: general, special ability, or stand-in/photo double
   bgTypes: string[] = []
+  date: string = '' // date of work, expressed as a string
+  actorName: string = '' // name of performer
+  prodName: string = '' // production name
   startTime: string = '' // should be date/time
   startTimeNum: number = 0 // numerical representation of startTime
   endTime: string = '' // should be date/time
@@ -122,7 +133,13 @@ export class FormComponent implements OnInit {
   hazardPay: number = 0 // negotiated amount for hazardous work
   otherBumps: number = 0 // negotiated amount for any other bumps
 
-  constructor() { }
+  vouchers: Voucher[] = [] // variable to hold vouchers array
+  id: number = 0 // id to be generated when this voucher record is created
+
+  constructor(private voucherService: VoucherService, route: ActivatedRoute, router: Router) { 
+    this.route = route
+    this.router = router
+  }
 
   ngOnInit(): void {
     this.bgTypes = [
@@ -130,10 +147,254 @@ export class FormComponent implements OnInit {
       'special ability',
       'stand-in or photo double'
     ]
-   }
 
-  logBgType(): void {
-    console.log(this.bgType);
+    this.setId()
+    // this.id = this.genId(this.vouchers)
+  }
+
+  setId(): void {
+    this.voucherService.getVouchers()
+        .subscribe(vouchers => {
+          this.vouchers = vouchers
+          this.id = this.genId(this.vouchers)
+          console.log(`Generating next id #${this.id}. Now checking for edit mode...`)
+          this.getVoucher()
+        })
+  }
+
+  // getVouchers(): void {
+  //   this.voucherService.getVouchers()
+  //       .subscribe(vouchers => {
+  //         this.vouchers = vouchers
+  //         this.id = this.genId(this.vouchers)
+  //         console.log(`Generating id #${this.id}`)
+  //       })
+  // }
+
+  getVoucher(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'))
+    this.voucherService.getVoucher(id)
+        .subscribe(voucher => {
+          this.voucher2Edit = voucher
+          this.id = voucher._id
+          console.log(`default id overwritten. Now editing voucher #${this.id}`)
+          this.date = voucher.date
+          this.actorName = voucher.actorName
+          this.prodName = voucher.prodName
+          this.bgType = voucher.bgType
+          this.wetPay = voucher.wetPay
+          this.smokePay = voucher.smokePay
+          this.hmu = voucher.hmu
+          this.startTime = voucher.startTime
+          this.endTime = voucher.endTime
+          this.ndbStart = voucher.ndbStart
+          this.lunchStart = voucher.lunchStart
+          this.lunchEnd = voucher.lunchEnd
+          this.dinnerStart = voucher.dinnerStart
+          this.dinnerEnd = voucher.dinnerEnd
+          this.numWardrobe = voucher.numWardrobe
+          this.formalWear = voucher.formalWear
+          this.policeWear = voucher.policeWear
+          this.pet = voucher.pet
+          this.golfClubs = voucher.golfClubs
+          this.tennisRacquet = voucher.tennisRacquet
+          this.luggage1 = voucher.luggage1
+          this.luggage2 = voucher.luggage2
+          this.camera = voucher.camera
+          this.skisPoles = voucher.skisPoles
+          this.otherPropsAmt = voucher.otherPropsAmt
+          this.car = voucher.car
+          this.trailer = voucher.trailer
+          this.bicycle = voucher.bicycle
+          this.moped = voucher.moped
+          this.motorcycle = voucher.motorcycle
+          this.policeMoto = voucher.policeMoto
+          this.skatesOrSkateboard = voucher.skatesOrSkateboard
+          this.hazardPay = voucher.hazardPay
+          this.otherBumps = voucher.otherBumps
+          this.mileage = voucher.mileage
+          this.tolls = voucher.tolls
+
+          this.calculate()
+          this.buttonLabel = 'Update voucher info with these details'
+        })
+  }
+  
+  genId(vouchers: Voucher[]): number {
+    return vouchers.length > 0 ? 
+      Math.max(...vouchers.map(v => v._id)) + 1 : 1
+  }
+
+  handleSubmit(): void {
+
+    const voucher2Submit = {
+      _id: this.id,
+      date: this.date,
+      actorName: this.actorName,
+      prodName: this.prodName,
+      bgType: this.bgType,
+      wetPay: this.wetPay,
+      smokePay: this.smokePay,
+      hmu: this.hmu,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      ndbStart: this.ndbStart,
+      lunchStart: this.lunchStart,
+      lunchEnd: this.lunchEnd,
+      dinnerStart: this.dinnerStart,
+      dinnerEnd: this.dinnerEnd,
+      numWardrobe: this.numWardrobe,
+      formalWear: this.formalWear,
+      policeWear: this.policeWear,
+      pet: this.pet,
+      golfClubs: this.golfClubs,
+      tennisRacquet: this.tennisRacquet,
+      luggage1: this.luggage1,
+      luggage2: this.luggage2,
+      camera: this.camera,
+      skisPoles: this.skisPoles,
+      otherPropsAmt: this.otherPropsAmt,
+      car: this.car,
+      trailer: this.trailer,
+      bicycle: this.bicycle,
+      moped: this.moped,
+      motorcycle: this.motorcycle,
+      policeMoto: this.policeMoto,
+      skatesOrSkateboard: this.skatesOrSkateboard,
+      hazardPay: this.hazardPay,
+      otherBumps: this.otherBumps,
+      mileage: this.mileage,
+      tolls: this.tolls,
+      hrsWorked: this.hrsWorked,
+      totalPay: this.totalPay,
+    }
+    
+    // pass voucher2Submit to the appropriate voucherService
+    if (this.voucher2Edit) {
+      this.voucherService.updateVoucher(voucher2Submit as Voucher).subscribe(() => {
+        this.redirect()
+      })
+    } else {
+      this.voucherService.addVoucher(voucher2Submit as Voucher).subscribe(() => {
+        this.redirect()
+      })
+    }
+
+    // this.clearForm()
+       
+    // //get the next id
+    // this.getVouchers()
+    // this.id = this.genId(this.vouchers)
+  }
+
+  clearForm(): void {
+    // this.id = 0
+    this.date = ''
+    this.actorName = ''
+    this.prodName = ''
+    this.bgType = ''
+    this.wetPay = false
+    this.smokePay = false
+    this.hmu = false
+    this.startTime = ''
+    this.startTimeNum = 0
+    this.endTime = ''
+    this.endTimeNum = 0
+    this.totalHrs = 0
+    this.ndbStart = ''
+    this.ndbStartNum = 0
+    this.ndbEnd = ''
+    this.ndbEndNum = 0
+    this.lunchStart = ''
+    this.lunchStartNum = 0
+    this.lunchEnd = ''
+    this.lunchEndNum = 0
+    this.lunchLength = 0
+    this.lunchPenalties = 0
+    this.lunchPenaltiesAmt = 0
+    this.dinnerStart = ''
+    this.dinnerStartNum = 0
+    this.dinnerEnd = ''
+    this.dinnerEndNum = 0
+    this.dinnerLength = 0
+    this.dinnerPenalties = 0
+    this.dinnerPenaltiesAmt = 0
+    this.hrsWorked = 0
+    this.overtimeHrs = 0
+    this.baseRate = 0
+    this.overtimeRate1 = 0
+    this.overtimeRate2 = 0
+    this.ot1Trigger = false
+    this.ot1TriggerTimeNum = 0
+    this.ot2Trigger = false
+    this.ot2TriggerTimeNum = 0
+    this.goldenTrigger = false
+    this.goldenTriggerTimeNum = 0
+    this.goldenRate = 0
+    this.goldenPay = 0
+    this.night1Trigger = false
+    this.hoursWorkedAt8pm = 0
+    this.baseN1Hrs = 0
+    this.baseN1Rate = 0
+    this.baseN1Amt = 0
+    this.ot1N1Hrs = 0
+    this.ot1N1Rate = 0
+    this.ot1N1Amt = 0
+    this.ot2N1Hrs = 0
+    this.ot2N1Rate = 0
+    this.ot2N1Amt = 0
+    this.totalNight1Hrs = 0
+    this.totalNight1Amt = 0
+    this.night2Trigger = false
+    this.hoursWorkedAt1am = 0
+    this.baseN2Hrs = 0
+    this.baseN2Rate = 0
+    this.baseN2Amt = 0
+    this.ot1N2Hrs = 0
+    this.ot1N2Rate = 0
+    this.ot1N2Amt = 0
+    this.ot2N2Hrs = 0
+    this.ot2N2Rate = 0
+    this.ot2N2Amt = 0
+    this.totalNight2Hrs = 0
+    this.totalNight2Amt = 0
+    this.totalNightPremiumsAmt = 0
+    this.basePay = 0
+    this.ot1Hrs = 0
+    this.ot1Pay = 0
+    this.ot2Hrs = 0
+    this.ot2Pay = 0
+    this.overtimePay = 0
+    this.totalWages = 0
+    this.totalBumps = 0
+    this.totalPenalties = 0
+    this.totalPay = 0
+    this.numWardrobe = 0
+    this.formalWear = false
+    this.policeWear = false
+    this.pet = false
+    this.golfClubs = false
+    this.tennisRacquet = false
+    this.luggage1 = false
+    this.luggage2 = false
+    this.camera = false
+    this.skisPoles = false
+    this.otherPropsAmt = 0
+    this.car = false
+    this.trailer = false
+    this.bicycle = false
+    this.moped = false
+    this.motorcycle = false
+    this.policeMoto = false
+    this.skatesOrSkateboard = false
+    this.mileage = 0
+    this.tolls = 0
+    this.hazardPay = 0
+    this.otherBumps = 0
+  }
+
+  redirect(): void {
+    window.location.replace('https://sag-voucher-front-end.herokuapp.com/')
   }
 
   calcBaseRate(): void {
@@ -199,9 +460,9 @@ export class FormComponent implements OnInit {
     }
     // console.log(this.ndbStartNum)
     // console.log(this.ndbEndNum)
-    console.log('lunchExpectedStart = ' + lunchExpectedStart)
+    // console.log('lunchExpectedStart = ' + lunchExpectedStart)
 
-    console.log('lunchStartNum = ' + this.lunchStartNum)
+    // console.log('lunchStartNum = ' + this.lunchStartNum)
 
     // if lunch starts after expected time OR if no lunch is served and end time is after expected lunch time, determine penalty number and penalty amt
     if ((this.lunchStartNum && this.lunchStartNum > lunchExpectedStart) ||
@@ -235,10 +496,10 @@ export class FormComponent implements OnInit {
       dinnerExpectedStart = null
     }
 
-    console.log('dinner expected start time: ' + dinnerExpectedStart)
+    // console.log('dinner expected start time: ' + dinnerExpectedStart)
 
 
-    console.log('dinner start time: ' + this.dinnerStartNum)
+    // console.log('dinner start time: ' + this.dinnerStartNum)
     // if there is an expected start time, and there was in fact a dinner break and that break started late...
     // OR if there was an expected start time, but there was no actual dinner break, and the end time was after the expected dinner break...
     if ((dinnerExpectedStart && this.dinnerStartNum && this.dinnerStartNum > dinnerExpectedStart) || 
@@ -468,8 +729,8 @@ export class FormComponent implements OnInit {
 
     // need to know hoursWorkedAt8pm
     let hoursWorkedAfter8pm = this.calcHrsAfter8pm()
-    this.night1Trigger ? this.hoursWorkedAt8pm = this.hrsWorked - hoursWorkedAfter8pm : null
-    console.log('hoursWorkedAt8pm: ' + this.hoursWorkedAt8pm)
+    this.night1Trigger ? this.hoursWorkedAt8pm = this.hrsWorked - hoursWorkedAfter8pm : null 
+    // console.log('hoursWorkedAt8pm: ' + this.hoursWorkedAt8pm)
 
     let night1MealHrs = 0
 
@@ -512,7 +773,9 @@ export class FormComponent implements OnInit {
       // let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20 // how many hours (on or off the clock) until OT2 kicks in
       if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N1 hrs...
         this.baseN1Hrs = this.totalNight1Hrs // all N1 hrs should be given baseN1Rate. Night meals already accounted for above
-      } else { // if OT1 kicks in at some point during N1
+      } else if (hrsUntilOT1Triggers < 5 && hrsUntilOT1Triggers > this.totalNight1Hrs + night1MealHrs) { // another scenario where you work fewer than 5 hours of N1 but still don't trigger OT1
+        this.baseN1Hrs = this.totalNight1Hrs
+      } else if (hrsUntilOT1Triggers < 5 && hrsUntilOT1Triggers <= this.totalNight1Hrs + night1MealHrs) { // if OT1 kicks in at some point during N1 and the total hours spent under N1 is greater than the number of hours needed to trigger ot1:
         // determine # of baseN1Hrs to receive baseN1Rate
         this.baseN1Hrs = hrsUntilOT1Triggers // num hrs (initially) to receive baseN1Rate
         this.ot1N1Hrs = this.totalNight1Hrs - hrsUntilOT1Triggers // num hrs (initially) to receive ot1N1Rate
@@ -572,7 +835,7 @@ export class FormComponent implements OnInit {
       this.baseN1Hrs = 0
       // determine # of ot1N1Hrs to receive ot1N1Rate
       let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20
-      if (this.totalNight1Hrs <= hrsUntilOT2Triggers) { // if all N1 hrs are OT1 hrs...
+      if (this.totalNight1Hrs + night1MealHrs <= hrsUntilOT2Triggers) { // if all N1 hrs are OT1 hrs...
         this.ot1N1Hrs = this.totalNight1Hrs // all N1 hrs should be given ot1N1Rate. Night meals already accounted for above
       } else { // if OT2 kicks in at some point during N1
       // determine # of ot1N1Hrs to receive ot1N1Rate
@@ -655,7 +918,7 @@ export class FormComponent implements OnInit {
     // need to know hoursWorkedAt1am
     let hoursWorkedAfter1am = this.calcHrsAfter1am()
     this.night2Trigger ? this.hoursWorkedAt1am = this.hrsWorked - hoursWorkedAfter1am : null
-    console.log('hoursWorkedAt1am: ' + this.hoursWorkedAt1am)
+    // console.log('hoursWorkedAt1am: ' + this.hoursWorkedAt1am)
 
     let night2MealHrs = 0
 
@@ -699,7 +962,9 @@ export class FormComponent implements OnInit {
       // let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 25 // how many hours (on or off the clock) until OT2 kicks in
       if (hrsUntilOT1Triggers >= 5) { // if base rate-applicable hrs are entirely within N2 hrs...
         this.baseN2Hrs = this.totalNight2Hrs // all N2 hrs should be given baseN2Rate. Night meals already accounted for above
-      } else { // if OT1 kicks in at some point during N2
+      } else if (hrsUntilOT1Triggers < 5 && hrsUntilOT1Triggers > this.totalNight2Hrs + night2MealHrs) { // another scenario where you work fewer than 5 hours of N2 but still don't trigger OT1
+        this.baseN2Hrs = this.totalNight2Hrs
+      } else if (hrsUntilOT1Triggers < 5 && hrsUntilOT1Triggers <= this.totalNight2Hrs + night2MealHrs) { // if OT1 kicks in at some point during N2 and the total hours spent under N2 is greater than the number of hours needed to trigger ot1:
         // determine # of baseN2Hrs to receive baseN2Rate
         this.baseN2Hrs = hrsUntilOT1Triggers // num hrs (initially) to receive baseN2Rate
         this.ot1N2Hrs = this.totalNight2Hrs - hrsUntilOT1Triggers // num hrs (initially) to receive ot1N2Rate
@@ -758,7 +1023,7 @@ export class FormComponent implements OnInit {
       this.baseN2Hrs = 0
       // determine # of ot1N2Hrs to receive ot1N2Rate
       let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20
-      if (this.totalNight2Hrs <= hrsUntilOT2Triggers) { // if all N2 hrs are OT1 hrs...
+      if (this.totalNight2Hrs + night2MealHrs <= hrsUntilOT2Triggers) { // if all N2 hrs are OT1 hrs...
         this.ot1N2Hrs = this.totalNight2Hrs // all N2 hrs should be given ot1N2Rate. Night meals already accounted for above
       } else { // if OT2 kicks in at some point during N2
       // determine # of ot1N2Hrs to receive ot1N2Rate
@@ -816,6 +1081,11 @@ export class FormComponent implements OnInit {
   }
 
   calculate(): void {
+    // this.getVoucher()
+    // this.getVouchers()
+    // this.voucher2Edit ? this.id = this.voucher2Edit._id : this.id = this.genId(this.vouchers)
+    console.log(`this voucher has id#: ${this.id}`)
+    // this.voucher2Edit ? console.log(`Editing voucher #${this.voucher2Edit._id}`) : null
     this.calcHrs()
     this.calcRates()
     this.calcMealPenalties()
@@ -823,8 +1093,8 @@ export class FormComponent implements OnInit {
     // console.log(`base rate: ${this.baseRate}\not1 rate: ${this.overtimeRate1}\not2 rate: ${this.overtimeRate2}`)
 
     if (this.hrsWorked <= 8 && this.hrsWorked > 0) { // worked 8 hrs or less, earns 8hrs pay and no overtime
-      this.hrsWorked = 8
-      this.basePay = this.hrsWorked * this.baseRate
+      // this.hrsWorked = 8
+      this.basePay = 8 * this.baseRate
       // console.log(`basePay: ${this.basePay}`)
       this.overtimeHrs = 0
       this.overtimePay = 0
