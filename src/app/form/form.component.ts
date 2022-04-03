@@ -216,7 +216,7 @@ export class FormComponent implements OnInit {
       Math.max(...vouchers.map(v => v._id)) + 1 : 1
   }
 
-  addNewVoucher(): void {
+  handleSubmit(): void {
 
     const voucher2Submit = {
       _id: this.id,

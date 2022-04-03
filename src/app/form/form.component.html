@@ -2,7 +2,7 @@
   <div class="form-container">
     <form>
       <button (click)="clearForm()">Clear Form</button>
-      <button (click)="addNewVoucher(); redirect()" routerLink="../vouchers">{{buttonLabel}}</button>
+      <button (click)="handleSubmit(); redirect()" routerLink="../vouchers">{{buttonLabel}}</button>
       <h3>Basics</h3>
       <label for="date">Date of work: </label>
       <input type="date" id="date" name="date" [(ngModel)]="date"><br/>
@@ -428,6 +428,6 @@
       </tbody>
     </table>
     <button (click)="clearForm()">Clear Form</button>
-    <button (click)="addNewVoucher(); redirect()" >{{buttonLabel}}</button>
+    <button (click)="handleSubmit(); redirect()" >{{buttonLabel}}</button>
   </div>
 </div>
