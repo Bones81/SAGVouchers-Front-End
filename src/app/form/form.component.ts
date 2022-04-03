@@ -148,19 +148,28 @@ export class FormComponent implements OnInit {
       'stand-in or photo double'
     ]
 
-    this.getVouchers()
-    this.getVoucher()
+    this.setId()
     // this.id = this.genId(this.vouchers)
   }
 
-  getVouchers(): void {
+  setId(): void {
     this.voucherService.getVouchers()
         .subscribe(vouchers => {
           this.vouchers = vouchers
           this.id = this.genId(this.vouchers)
-          console.log(`Generating id #${this.id}`)
+          console.log(`Generating next id #${this.id}. Now checking for edit mode...`)
+          this.getVoucher()
         })
   }
+
+  // getVouchers(): void {
+  //   this.voucherService.getVouchers()
+  //       .subscribe(vouchers => {
+  //         this.vouchers = vouchers
+  //         this.id = this.genId(this.vouchers)
+  //         console.log(`Generating id #${this.id}`)
+  //       })
+  // }
 
   getVoucher(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'))
@@ -262,12 +271,16 @@ export class FormComponent implements OnInit {
     
     // pass voucher2Submit to the appropriate voucherService
     if (this.voucher2Edit) {
-      this.voucherService.updateVoucher(voucher2Submit as Voucher).subscribe()
+      this.voucherService.updateVoucher(voucher2Submit as Voucher).subscribe(() => {
+        this.redirect()
+      })
     } else {
-      this.voucherService.addVoucher(voucher2Submit as Voucher).subscribe()
+      this.voucherService.addVoucher(voucher2Submit as Voucher).subscribe(() => {
+        this.redirect()
+      })
     }
 
-    this.clearForm()
+    // this.clearForm()
        
     // //get the next id
     // this.getVouchers()
