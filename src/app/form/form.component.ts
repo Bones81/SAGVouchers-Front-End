@@ -837,6 +837,7 @@ export class FormComponent implements OnInit {
       let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20
       if (this.totalNight1Hrs + night1MealHrs <= hrsUntilOT2Triggers) { // if all N1 hrs are OT1 hrs...
         this.ot1N1Hrs = this.totalNight1Hrs // all N1 hrs should be given ot1N1Rate. Night meals already accounted for above
+        this.ot2N1Hrs = 0
       } else { // if OT2 kicks in at some point during N1
       // determine # of ot1N1Hrs to receive ot1N1Rate
         this.ot1N1Hrs = hrsUntilOT2Triggers // num hrs (initially) to receive ot1N1Rate, should be any more than 2
@@ -1017,7 +1018,7 @@ export class FormComponent implements OnInit {
           } 
         }
       }
-    // IF NIGHT PREMIUM 1 STARTS WHILE UNDER OT1 RATE
+    // IF NIGHT PREMIUM 2 STARTS WHILE UNDER OT1 RATE
     } else if (this.night2Trigger && this.hoursWorkedAt1am >= 8 && this.hoursWorkedAt1am < 10) { // N2 hrs start during OT1
       //this means no N2 hrs occurred under the base rate
       this.baseN2Hrs = 0
@@ -1025,6 +1026,7 @@ export class FormComponent implements OnInit {
       let hrsUntilOT2Triggers = this.ot2TriggerTimeNum - 20
       if (this.totalNight2Hrs + night2MealHrs <= hrsUntilOT2Triggers) { // if all N2 hrs are OT1 hrs...
         this.ot1N2Hrs = this.totalNight2Hrs // all N2 hrs should be given ot1N2Rate. Night meals already accounted for above
+        this.ot2N2Hrs = 0
       } else { // if OT2 kicks in at some point during N2
       // determine # of ot1N2Hrs to receive ot1N2Rate
         this.ot1N2Hrs = hrsUntilOT2Triggers // num hrs (initially) to receive ot1N2Rate, should be any more than 2
@@ -1096,6 +1098,8 @@ export class FormComponent implements OnInit {
       // this.hrsWorked = 8
       this.basePay = 8 * this.baseRate
       // console.log(`basePay: ${this.basePay}`)
+      this.ot1Hrs = 0
+      this.ot2Hrs = 0
       this.overtimeHrs = 0
       this.overtimePay = 0
       this.goldenPay = 0
