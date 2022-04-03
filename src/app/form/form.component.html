@@ -1,11 +1,15 @@
 <div class="content-container">
   <div class="form-container">
     <form>
+      <button (click)="clearForm()">Clear Form</button>
+      <button (click)="addNewVoucher(); redirect()" routerLink="../vouchers">Create Voucher Record with Current Info</button>
       <h3>Basics</h3>
+      <label for="date">Date of work: </label>
+      <input type="date" id="date" name="date" [(ngModel)]="date"><br/>
       <label for="actorName">Actor name: </label>
-      <input type="text" id="actorName" name="actorName" /><br/>
+      <input type="text" id="actorName" name="actorName" [(ngModel)]="actorName"/><br/>
       <label for="prodName">Production name: </label>
-      <input type="text" id="prodName" name="prodName" />
+      <input type="text" id="prodName" name="prodName" [(ngModel)]="prodName"/>
       <h3>Base Rate and modifiers</h3>
       <label for="bgType">Work Category: </label>
       <select name="bgType" id="bgType" [(ngModel)]="bgType" (ngModelChange)="calculate()">
@@ -139,6 +143,10 @@
           </th>
         </thead>
         <tbody>
+          <tr>
+            <td>Generated Id#</td>
+            <td>{{id}}</td>
+          </tr>
           <tr>
             <td>Work Category</td>
             <td>{{bgType}}</td>
@@ -419,5 +427,7 @@
         </tr>
       </tbody>
     </table>
+    <button (click)="clearForm()">Clear Form</button>
+    <button (click)="addNewVoucher(); redirect()" >Create Voucher Record with Current Info</button>
   </div>
 </div>

@@ -1,5 +1,6 @@
 export interface Voucher {
-  id: number
+  _id: number
+  date: string
   actorName: string
   prodName: string
   bgType: string
@@ -35,4 +36,6 @@ export interface Voucher {
   otherBumps: number
   mileage: number
   tolls: number
+  hrsWorked: number
+  totalPay: number
 }

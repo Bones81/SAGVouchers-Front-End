@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AllVouchersComponent } from './all-vouchers/all-vouchers.component';
 import { FormComponent } from './form/form.component';
 
 const routes: Routes = [
-  {path: 'form', component: FormComponent}
+  {path: '', redirectTo: '/vouchers', pathMatch: 'full'},
+  {path: 'form', component: FormComponent},
+  // {path: 'voucher/:id', component: VoucherDetailComponent}
+  {path: 'vouchers', component: AllVouchersComponent}
 ];
 
 @NgModule({

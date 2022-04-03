@@ -21,10 +21,8 @@ export class AllVouchersComponent implements OnInit {
         .subscribe(vouchers => this.vouchers = vouchers)
   }
 
-
-
   delete(voucher: Voucher): void {
     this.vouchers = this.vouchers.filter(v => v !== voucher)
-    this.voucherService.deleteVoucher(voucher.id).subscribe()
+    this.voucherService.deleteVoucher(voucher._id).subscribe()
   }
 }

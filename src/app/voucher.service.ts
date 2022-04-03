@@ -11,7 +11,7 @@ import { Voucher } from './voucher';
 })
 export class VoucherService {
 
-  private vouchersUrl = 'localhost:3001/vouchers'
+  private vouchersUrl = 'http://localhost:3001/vouchers'
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -53,9 +53,9 @@ export class VoucherService {
 
   /** PUT: update the voucher on the server */
   updateVoucher(voucher: Voucher): Observable<any> {
-    const url = `${this.vouchersUrl}/edit/${voucher.id}`
+    const url = `${this.vouchersUrl}/edit/${voucher._id}`
     return this.http.put(url, voucher, this.httpOptions).pipe(
-      tap(_ => console.log(`updated voucher id=${voucher.id}`)),
+      tap(_ => console.log(`updated voucher id=${voucher._id}`)),
       catchError(this.handleError<any>(`updateVoucher`))
     ) 
   }
@@ -63,8 +63,8 @@ export class VoucherService {
   /** POST: add a new voucher to the server */
   addVoucher(voucher: Voucher): Observable<Voucher> {
     return this.http.post<Voucher>(this.vouchersUrl, voucher, this.httpOptions).pipe(
-      tap((newVoucher: Voucher) => console.log(`added voucher w id=${newVoucher.id}`)),
-      catchError(this.handleError<Voucher>('addVoucher'))
+      tap((newVoucher: Voucher) => console.log(`added voucher w id=${newVoucher._id}`)),
+      catchError(this.handleError<Voucher>('addVoucher')),
     )
   }
 
@@ -79,7 +79,7 @@ export class VoucherService {
   }
 
   /** GET vouchers whose name contains search term */
-  searchVouchersByName(term: string): Observable<Voucher[]> {
+  searchVouchersByActorName(term: string): Observable<Voucher[]> {
     if (!term.trim()) {
       //if not search term, return empty vouchers array
       return of([])
@@ -109,5 +109,10 @@ export class VoucherService {
       // Let the app keep running by returning an empty result.
       return of(result as T)
     }
+  }
+
+  genId(vouchers: Voucher[]): number {
+    return vouchers.length > 0 ?
+      Math.max(...vouchers.map(v => v._id)) + 1 : 1
   }
 }

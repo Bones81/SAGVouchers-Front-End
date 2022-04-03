@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Voucher } from '../voucher';
+import { VoucherService } from '../voucher.service';
 
 @Component({
   selector: 'app-form',
@@ -6,8 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
+
   bgType: string = '' // Type of BG work: general, special ability, or stand-in/photo double
   bgTypes: string[] = []
+  date: string = '' // date of work, expressed as a string
+  actorName: string = '' // name of performer
+  prodName: string = '' // production name
   startTime: string = '' // should be date/time
   startTimeNum: number = 0 // numerical representation of startTime
   endTime: string = '' // should be date/time
@@ -122,7 +128,10 @@ export class FormComponent implements OnInit {
   hazardPay: number = 0 // negotiated amount for hazardous work
   otherBumps: number = 0 // negotiated amount for any other bumps
 
-  constructor() { }
+  vouchers: Voucher[] = [] // variable to hold vouchers array
+  id: number = 0 // id to be generated when this voucher record is created
+
+  constructor(private voucherService: VoucherService) { }
 
   ngOnInit(): void {
     this.bgTypes = [
@@ -130,10 +139,181 @@ export class FormComponent implements OnInit {
       'special ability',
       'stand-in or photo double'
     ]
-   }
+    this.getVouchers()
+    this.id = this.genId(this.vouchers)
+  }
 
-  logBgType(): void {
-    console.log(this.bgType);
+  getVouchers(): void {
+    this.voucherService.getVouchers()
+        .subscribe(vouchers => this.vouchers = vouchers)
+  }
+  
+  genId(vouchers: Voucher[]): number {
+    return vouchers.length > 0 ? 
+      Math.max(...vouchers.map(v => v._id)) + 1 : 1
+  }
+
+  addNewVoucher(): void {
+
+    const voucher2Add = {
+      _id: this.id,
+      date: this.date,
+      actorName: this.actorName,
+      prodName: this.prodName,
+      bgType: this.bgType,
+      wetPay: this.wetPay,
+      smokePay: this.smokePay,
+      hmu: this.hmu,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      ndbStart: this.ndbStart,
+      lunchStart: this.lunchStart,
+      lunchEnd: this.lunchEnd,
+      dinnerStart: this.dinnerStart,
+      dinnerEnd: this.dinnerEnd,
+      numWardrobe: this.numWardrobe,
+      formalWear: this.formalWear,
+      policeWear: this.policeWear,
+      pet: this.pet,
+      golfClubs: this.golfClubs,
+      tennisRacquet: this.tennisRacquet,
+      luggage1: this.luggage1,
+      luggage2: this.luggage2,
+      camera: this.camera,
+      skisPoles: this.skisPoles,
+      otherPropsAmt: this.otherPropsAmt,
+      car: this.car,
+      trailer: this.trailer,
+      bicycle: this.bicycle,
+      moped: this.moped,
+      motorcycle: this.motorcycle,
+      policeMoto: this.policeMoto,
+      skatesOrSkateboard: this.skatesOrSkateboard,
+      hazardPay: this.hazardPay,
+      otherBumps: this.otherBumps,
+      mileage: this.mileage,
+      tolls: this.tolls,
+      hrsWorked: this.hrsWorked,
+      totalPay: this.totalPay,
+    }
+    
+    // pass this voucher2Add to the voucherService
+    this.voucherService.addVoucher(voucher2Add as Voucher).subscribe()
+    this.clearForm()
+       
+    // //get the next id
+    // this.getVouchers()
+    // this.id = this.genId(this.vouchers)
+  }
+
+  clearForm(): void {
+    // this.id = 0
+    this.date = ''
+    this.actorName = ''
+    this.prodName = ''
+    this.bgType = ''
+    this.wetPay = false
+    this.smokePay = false
+    this.hmu = false
+    this.startTime = ''
+    this.startTimeNum = 0
+    this.endTime = ''
+    this.endTimeNum = 0
+    this.totalHrs = 0
+    this.ndbStart = ''
+    this.ndbStartNum = 0
+    this.ndbEnd = ''
+    this.ndbEndNum = 0
+    this.lunchStart = ''
+    this.lunchStartNum = 0
+    this.lunchEnd = ''
+    this.lunchEndNum = 0
+    this.lunchLength = 0
+    this.lunchPenalties = 0
+    this.lunchPenaltiesAmt = 0
+    this.dinnerStart = ''
+    this.dinnerStartNum = 0
+    this.dinnerEnd = ''
+    this.dinnerEndNum = 0
+    this.dinnerLength = 0
+    this.dinnerPenalties = 0
+    this.dinnerPenaltiesAmt = 0
+    this.hrsWorked = 0
+    this.overtimeHrs = 0
+    this.baseRate = 0
+    this.overtimeRate1 = 0
+    this.overtimeRate2 = 0
+    this.ot1Trigger = false
+    this.ot1TriggerTimeNum = 0
+    this.ot2Trigger = false
+    this.ot2TriggerTimeNum = 0
+    this.goldenTrigger = false
+    this.goldenTriggerTimeNum = 0
+    this.goldenRate = 0
+    this.goldenPay = 0
+    this.night1Trigger = false
+    this.hoursWorkedAt8pm = 0
+    this.baseN1Hrs = 0
+    this.baseN1Rate = 0
+    this.baseN1Amt = 0
+    this.ot1N1Hrs = 0
+    this.ot1N1Rate = 0
+    this.ot1N1Amt = 0
+    this.ot2N1Hrs = 0
+    this.ot2N1Rate = 0
+    this.ot2N1Amt = 0
+    this.totalNight1Hrs = 0
+    this.totalNight1Amt = 0
+    this.night2Trigger = false
+    this.hoursWorkedAt1am = 0
+    this.baseN2Hrs = 0
+    this.baseN2Rate = 0
+    this.baseN2Amt = 0
+    this.ot1N2Hrs = 0
+    this.ot1N2Rate = 0
+    this.ot1N2Amt = 0
+    this.ot2N2Hrs = 0
+    this.ot2N2Rate = 0
+    this.ot2N2Amt = 0
+    this.totalNight2Hrs = 0
+    this.totalNight2Amt = 0
+    this.totalNightPremiumsAmt = 0
+    this.basePay = 0
+    this.ot1Hrs = 0
+    this.ot1Pay = 0
+    this.ot2Hrs = 0
+    this.ot2Pay = 0
+    this.overtimePay = 0
+    this.totalWages = 0
+    this.totalBumps = 0
+    this.totalPenalties = 0
+    this.totalPay = 0
+    this.numWardrobe = 0
+    this.formalWear = false
+    this.policeWear = false
+    this.pet = false
+    this.golfClubs = false
+    this.tennisRacquet = false
+    this.luggage1 = false
+    this.luggage2 = false
+    this.camera = false
+    this.skisPoles = false
+    this.otherPropsAmt = 0
+    this.car = false
+    this.trailer = false
+    this.bicycle = false
+    this.moped = false
+    this.motorcycle = false
+    this.policeMoto = false
+    this.skatesOrSkateboard = false
+    this.mileage = 0
+    this.tolls = 0
+    this.hazardPay = 0
+    this.otherBumps = 0
+  }
+
+  redirect(): void {
+    window.location.replace('http://localhost:4200/')
   }
 
   calcBaseRate(): void {
@@ -816,6 +996,9 @@ export class FormComponent implements OnInit {
   }
 
   calculate(): void {
+    this.getVouchers()
+    this.id = this.genId(this.vouchers)
+    console.log(`generated id#: ${this.id}`)
     this.calcHrs()
     this.calcRates()
     this.calcMealPenalties()

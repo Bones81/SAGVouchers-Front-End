@@ -4,3 +4,20 @@
   margin: 0;
   padding: 0;
 }
+
+a {
+  text-decoration: none;
+  margin: 1em;
+  transition: all .3s ease;
+}
+
+a:hover {
+  transform: scale(1.1);
+  text-shadow: blue 1px 1px 5px;
+}
+
+nav {
+  display: flex;
+  gap: 1em;
+  /* padding: 1em; */
+}
