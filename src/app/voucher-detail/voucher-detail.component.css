@@ -1,7 +1,7 @@
 ul {
   list-style-type: none;
   padding: 0 1em;
-  width: 90%;
+  width: fit-content;
   margin: 0 auto;
 }
 
@@ -26,14 +26,15 @@ span {
   font-family: 'Inter', sans-serif;
 }
 
-@media (min-width: 800px) {
-  ul {
-    width: 70%;
-  }
+.content-container {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1em;
+  justify-content: center;
 }
 
-@media (min-width: 1080px) {
-  ul {
-    width: 50%;
-  }
+.basic-details {
+  border-bottom: 2px solid darkcyan;
+  text-shadow: 1px 1px 1px black;
+
 }

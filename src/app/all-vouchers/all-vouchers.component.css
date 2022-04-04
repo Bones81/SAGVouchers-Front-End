@@ -6,6 +6,8 @@ h2 {
   background: linear-gradient(215deg, seagreen, darkcyan, seagreen);
   padding: 0.5em;
   box-sizing: border-box;
+  text-shadow: 1px 1px 1px black;
+  text-transform: uppercase;
 }
 
 tr {
@@ -47,19 +49,37 @@ th, td {
   padding: .5em;
 }
 
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
 
 /* table, thead, tbody, td, th, tr {
   border: solid 1px black;
 } */
 
+.some-details {
+  display: none;
+}
+
 .more-details {
   display: none;
+}
+
+@media (min-width: 600px) {
+  .some-details {
+    display: table-cell;
+  }
 }
 
 @media (min-width: 800px) {
   .more-details {
     display: table-cell;
-    text-align: center;
+    /* text-align: center; */
   }
 
   h2 {
