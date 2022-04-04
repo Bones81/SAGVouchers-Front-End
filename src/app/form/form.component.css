@@ -6,7 +6,8 @@
 .content-container {
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-evenly;
   gap: 1em;
 }
 
@@ -17,20 +18,80 @@ input[type="number"] {
 table {
   background-color: lightgrey;
   border: 1px solid black;
-  margin: 10px 0;
+  margin: 10px auto;
 }
 
 td {
   border: 1px solid black;
   padding: 2px 5px;
+  max-width: 220px;
 }
 
 .table-flex {
   display: flex;
   flex-flow: row wrap;
+  justify-content: space-evenly;
   gap: 1em;
 }
 
+h2 {
+  width: 100%;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  text-shadow: black 1px 1px 1px;
+  font-size: 1.25em;
+  background: linear-gradient(215deg, seagreen, darkcyan, seagreen);
+  padding: 1em;
+}
+
 h3, h4 {
-  margin: 0.25 auto;
+  padding: 0.5em;
+}
+
+h2, h3, h4 {
+  text-align: center;
+  margin: 0;
+}
+
+form {
+  padding-bottom: 1em;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1em;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: center;
+}
+
+.btn-wrapper {
+  width: 90%;
+  margin: 1em auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  display: inline-block;
+  padding: 0.5em;
+  margin: 0.5em 1em;
+  border-radius: 5px;
+}
+
+.clear-btn {
+  background-color: brown;
+}
+
+.submit-btn {
+  background-color: green;
+  font-size: 1em;
+}
+
+.grand-total td{
+  font-size: 1.5em;
+  border: dotted gold 3px;
+}
+
+.right {
+  text-align: right;
 }

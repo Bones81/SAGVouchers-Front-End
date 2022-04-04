@@ -3,12 +3,27 @@
   color: whitesmoke;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 1.25em;
+  text-align: center;
+  padding: 0.5em;
+  width: 100%;
+  text-shadow: black 1px 1px 1px;
 }
 
 a {
+  font-size: .75em;
+  background: rgb(121, 27, 121);
   text-decoration: none;
   margin: 1em;
   transition: all .3s ease;
+  text-align: center;
+  padding: 0.25em 1em;
+  border-radius: 10px;
+  box-shadow: 0px 2px 0px darkolivegreen;
 }
 
 a:hover {
@@ -17,7 +32,20 @@ a:hover {
 }
 
 nav {
+  width: 100%;
   display: flex;
   gap: 1em;
+  justify-content: center;
+  background: rgb(89, 6, 89);
   /* padding: 1em; */
+}
+
+@media (min-width: 800px) {
+  h1 {
+    font-size: 2em;
+  }
+
+  a {
+    font-size: 1em;
+  }
 }

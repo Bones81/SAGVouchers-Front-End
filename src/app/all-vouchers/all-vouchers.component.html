@@ -2,20 +2,21 @@
 
 <table class="vouchers">
   <thead>
-    <th>Id</th>
-    <th>Date</th>
+    <th class="more-details">Id</th>
+    <th class="more-details">Date</th>
     <th>Actor Name</th>
-    <th>Production</th>
-    <th>Hours Worked</th>
+    <th class="more-details">Production</th>
+    <th class="more-details">Hours Worked</th>
     <th>Total</th>
+    <th colspan="3">Options</th>
   </thead>
   <tbody>
-    <tr *ngFor="let voucher of vouchers" >
-      <td>{{voucher._id}}</td>
-      <td>{{voucher.date}}</td>
+    <tr *ngFor="let voucher of vouchers" class="record-row">
+      <td class="more-details">{{voucher._id}}</td>
+      <td class="more-details">{{voucher.date}}</td>
       <td>{{voucher.actorName}} </td>
-      <td>{{voucher.prodName}}</td>
-      <td>{{voucher.hrsWorked | number: '1.1-1'}}</td>
+      <td class="more-details">{{voucher.prodName}}</td>
+      <td class="more-details">{{voucher.hrsWorked | number: '1.1-1'}}</td>
       <td>${{voucher.totalPay | number: '1.2-2'}}</td>
       <td>
         <button>

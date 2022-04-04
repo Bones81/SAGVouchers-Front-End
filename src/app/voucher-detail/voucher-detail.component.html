@@ -1,14 +1,15 @@
 <div *ngIf="voucher">
   <div class="basic-details">
     <h2>{{voucher.actorName | uppercase}}</h2>
-    <h4>Details of {{voucher.date}} work on {{voucher.prodName}}</h4>
+    <h4>{{voucher.date}} voucher details</h4>
+    <h2>{{voucher.prodName}}</h2>
     <h3>Total hours worked: {{voucher.hrsWorked | number: '1.1-1'}}</h3>
     <h3>Total pay: ${{voucher.totalPay | number: '1.2-2'}}</h3>
     <div class="btn-holder">
       <button (click)="goBack()">Back</button>
     </div>
   </div>
-  <h4 class="detail-section-header">Basic Details</h4>
+  <h3 class="detail-section-header">Basic Details</h3>
   <ul class="detail-section">
     <li><span>Start (Clock In): </span>{{voucher.startTime}}</li>
     <li><span>End (Clock Out): </span>{{voucher.endTime}}</li>
@@ -17,7 +18,7 @@
     <li><span>Smoke Pay: </span>{{voucher.smokePay}}</li>
     <li><span>Full Beard, or Body Makeup: </span>{{voucher.hmu}}</li>
   </ul>
-  <h4 class="detail-section-header">Meal details</h4>
+  <h3 class="detail-section-header">Meal details</h3>
   <ul class="detail-section">
     <li><span>NDB Start: </span>{{voucher.ndbStart}}</li>
     <li><span>Lunch Start: </span>{{voucher.lunchStart}}</li>
@@ -25,13 +26,13 @@
     <li><span>Dinner Start: </span>{{voucher.dinnerStart}}</li>
     <li><span>Dinner End: </span>{{voucher.dinnerEnd}}</li>
   </ul>
-  <h4 class="detail-section-header">Wardrobe options</h4>
+  <h3 class="detail-section-header">Wardrobe options</h3>
   <ul class="detail-section">
     <li><span>Number of wardrobe changes: </span>{{voucher.numWardrobe}}</li>
     <li><span>Formal wear: </span>{{voucher.formalWear}}</li>
     <li><span>Police uniform: </span>{{voucher.policeWear}}</li>
   </ul>
-  <h4 class="detail-section-header">Props options</h4>
+  <h3 class="detail-section-header">Props options</h3>
   <ul class="detail-section">
     <li><span>Pet: </span>{{voucher.pet}}</li>
     <li><span>Golf Clubs: </span>{{voucher.golfClubs}}</li>
@@ -42,7 +43,7 @@
     <li><span>Skis/Poles: </span>{{voucher.skisPoles}}</li>
     <li><span>Other Props (negotiated amt): </span>{{voucher.otherPropsAmt}}</li>
   </ul>
-  <h4 class="detail-section-header">Vehicle options</h4>
+  <h3 class="detail-section-header">Vehicle options</h3>
   <ul class="detail-section">
     <li><span>Car: </span>{{voucher.car}}</li>
     <li><span>Trailer: </span>{{voucher.trailer}}</li>

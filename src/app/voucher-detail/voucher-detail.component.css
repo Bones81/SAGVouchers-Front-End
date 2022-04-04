@@ -1,6 +1,16 @@
 ul {
   list-style-type: none;
   padding: 0 1em;
+  width: 90%;
+  margin: 0 auto;
+}
+
+h2, h3, h4 {
+  text-align: center;
+}
+
+.btn-holder {
+  text-align: center;
 }
 
 .btn-holder button {
@@ -9,4 +19,21 @@ ul {
   border-radius: 5px;
   background-color: darkolivegreen;
   font-size: 1em;
+}
+
+span {
+  padding-right: 10px;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (min-width: 800px) {
+  ul {
+    width: 70%;
+  }
+}
+
+@media (min-width: 1080px) {
+  ul {
+    width: 50%;
+  }
 }

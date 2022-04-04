@@ -1,5 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Overlock&family=Zilla+Slab&display=swap');
+
 * {
   background-color: darkslategrey;
   color: whitesmoke;
+  font-family: 'Zilla Slab', serif;
 }
+
+h1 {
+  font-family: 'Inter', sans-serif;
+}
+
+h3, h4 {
+  font-family: 'Overlock', cursive;
+}
+

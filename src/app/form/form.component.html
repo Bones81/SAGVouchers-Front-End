@@ -1,137 +1,133 @@
+<div class="btn-wrapper">
+  <button (click)="clearForm()" class="clear-btn">Clear Form</button>
+  <button (click)="handleSubmit()" routerLink="../vouchers" class="submit-btn">{{buttonLabel}}</button>
+</div>
 <div class="content-container">
   <div class="form-container">
+    <h2>Enter Voucher Data</h2>
     <form>
-      <button (click)="clearForm()">Clear Form</button>
-      <button (click)="handleSubmit()" routerLink="../vouchers">{{buttonLabel}}</button>
-      <h3>Basics</h3>
-      <label for="date">Date of work: </label>
-      <input type="date" id="date" name="date" [(ngModel)]="date"><br/>
-      <label for="actorName">Actor name: </label>
-      <input type="text" id="actorName" name="actorName" [(ngModel)]="actorName"/><br/>
-      <label for="prodName">Production name: </label>
-      <input type="text" id="prodName" name="prodName" [(ngModel)]="prodName"/>
-      <h3>Base Rate and modifiers</h3>
-      <label for="bgType">Work Category: </label>
-      <select name="bgType" id="bgType" [(ngModel)]="bgType" (ngModelChange)="calculate()">
-        <option *ngFor="let bgType of bgTypes" [ngValue]="bgType">{{bgType}}</option>
-      </select><br/>
-  
-      <label for="wetPay">Wet work (+$14 to daily rate) </label>
-      <input type="checkbox" name="wetPay" id="wetPay" [(ngModel)]="wetPay" (ngModelChange)="calculate()"/><br/>
-      <label for="smokePay">Smoke work (+$14 to daily rate) </label>
-      <input type="checkbox" name="smokePay" id="smokePay" [(ngModel)]="smokePay" (ngModelChange)="calculate()"/><br/>
-      <label for="hmu">Full beard or body makeup (+$19 to daily rate) </label>
-      <input type="checkbox" name="hmu" id="hmu" [(ngModel)]="hmu" (ngModelChange)="calculate()"/><br/>
-  
-      <h3>Start and End times</h3>
-      <label for="startTime">Start time: </label>
-      <input type="time" id="startTime" name="startTime" [(ngModel)]="startTime" (ngModelChange)="calculate()"/><br/>
-      <label for="endTime">End time: </label>
-      <input type="time" id="endTime" name="endTime" [(ngModel)]="endTime" (ngModelChange)="calculate()"/><br/>
-  
-      <h3>Meal times</h3>
-      <label for="ndbStart">NDB start: </label>
-      <input type="time" id="ndbStart" name="ndbStart" [(ngModel)]="ndbStart" (ngModelChange)="calculate()"/><br/>
-  
-      <label for="lunchStart">Lunch start: </label>
-      <input type="time" id="lunchStart" name="lunchStart" [(ngModel)]="lunchStart" (ngModelChange)="calculate()"/><br/>
-      <label for="lunchEnd">Lunch end: </label>
-      <input type="time" id="lunchEnd" name="lunchEnd" [(ngModel)]="lunchEnd" (ngModelChange)="calculate()"/><br/>
-  
-      <label for="dinnerStart">Dinner start: </label>
-      <input type="time" id="dinnerStart" name="dinnerStart" [(ngModel)]="dinnerStart" (ngModelChange)="calculate()"/><br/>
-      <label for="dinnerEnd">Dinner end: </label>
-      <input type="time" id="dinnerEnd" name="dinnerEnd" [(ngModel)]="dinnerEnd" (ngModelChange)="calculate()"/><br/>
-  
-      <!-- <label for="hrsWorked">Total Hours Worked: </label>
-      <input type="text" [(ngModel)]="hrsWorked" id="hrsWorked" name="hrsWorked" placeholder="12.5" /> -->
-      <h4>Wardrobe options</h4>
-      <label for="numWardrobe">Number of wardrobe changes requested: </label>
-      <input type="number" name="numWardrobe" id="numWardrobe" [(ngModel)]="numWardrobe" (ngModelChange)="calculate()"/><br/>
-      ($9 for first change, $6.50 for each additional change)<br/>
-  
-      <label for="formalWear">Formal wear (+$18)</label>
-      <input type="checkbox" name="formalWear" id="formalWear" [(ngModel)]="formalWear" (ngModelChange)="calculate()"/><br/>
-      <label for="policeWear">Police outfit (+$36)</label>
-      <input type="checkbox" name="policeWear" id="policeWear" [(ngModel)]="policeWear" (ngModelChange)="calculate()"/><br/>
-  
-      <h4>Props options</h4>
-      <label for="pet">Pet (+$23)</label>
-      <input type="checkbox" name="pet" id="pet" [(ngModel)]="pet" (ngModelChange)="calculate()"/><br/>
-      <label for="golfClubs">Golf clubs(+$12)</label>
-      <input type="checkbox" name="golfClubs" id="golfClubs" [(ngModel)]="golfClubs" (ngModelChange)="calculate()"/><br/>
-      <label for="tennisRacquet">Tennis racquet (+$5.50)</label>
-      <input type="checkbox" name="tennisRacquet" id="tennisRacquet" [(ngModel)]="tennisRacquet" (ngModelChange)="calculate()"/><br/>
-      <label for="luggage1">Luggage (first piece, +$5.50)</label>
-      <input type="checkbox" name="luggage1" id="luggage1" [(ngModel)]="luggage1" (ngModelChange)="calculate()"/><br/>
-      <div *ngIf="luggage1" >
-        <label for="luggage2">Luggage (second piece, +$5.50)</label>
-        <input type="checkbox" name="luggage2" id="luggage2" [(ngModel)]="luggage2" (ngModelChange)="calculate()"/><br/>
+      <div class="form-flex-item">
+        <h3>Basics</h3>
+        <label for="date">Date of work: </label>
+        <input type="date" id="date" name="date" [(ngModel)]="date"><br/>
+        <label for="actorName">Actor name: </label>
+        <input type="text" id="actorName" name="actorName" [(ngModel)]="actorName"/><br/>
+        <label for="prodName">Production name: </label>
+        <input type="text" id="prodName" name="prodName" [(ngModel)]="prodName"/>
+        <h3>Base Rate and modifiers</h3>
+        <label for="bgType">Work Category: </label>
+        <select name="bgType" id="bgType" [(ngModel)]="bgType" (ngModelChange)="calculate()">
+          <option *ngFor="let bgType of bgTypes" [ngValue]="bgType">{{bgType}}</option>
+        </select><br/>
+        <label for="wetPay">Wet work (+$14 to daily rate) </label>
+        <input type="checkbox" name="wetPay" id="wetPay" [(ngModel)]="wetPay" (ngModelChange)="calculate()"/><br/>
+        <label for="smokePay">Smoke work (+$14 to daily rate) </label>
+        <input type="checkbox" name="smokePay" id="smokePay" [(ngModel)]="smokePay" (ngModelChange)="calculate()"/><br/>
+        <label for="hmu">Full beard or body makeup (+$19 to daily rate) </label>
+        <input type="checkbox" name="hmu" id="hmu" [(ngModel)]="hmu" (ngModelChange)="calculate()"/><br/>
+        <h3>Start and End times</h3>
+        <label for="startTime">Start time: </label>
+        <input type="time" id="startTime" name="startTime" [(ngModel)]="startTime" (ngModelChange)="calculate()"/><br/>
+        <label for="endTime">End time: </label>
+        <input type="time" id="endTime" name="endTime" [(ngModel)]="endTime" (ngModelChange)="calculate()"/><br/>
+        <h3>Meal times</h3>
+        <label for="ndbStart">NDB start: </label>
+        <input type="time" id="ndbStart" name="ndbStart" [(ngModel)]="ndbStart" (ngModelChange)="calculate()"/><br/>
+        <label for="lunchStart">Lunch start: </label>
+        <input type="time" id="lunchStart" name="lunchStart" [(ngModel)]="lunchStart" (ngModelChange)="calculate()"/><br/>
+        <label for="lunchEnd">Lunch end: </label>
+        <input type="time" id="lunchEnd" name="lunchEnd" [(ngModel)]="lunchEnd" (ngModelChange)="calculate()"/><br/>
+        <label for="dinnerStart">Dinner start: </label>
+        <input type="time" id="dinnerStart" name="dinnerStart" [(ngModel)]="dinnerStart" (ngModelChange)="calculate()"/><br/>
+        <label for="dinnerEnd">Dinner end: </label>
+        <input type="time" id="dinnerEnd" name="dinnerEnd" [(ngModel)]="dinnerEnd" (ngModelChange)="calculate()"/><br/>
       </div>
-      <label for="camera">Camera (+$5.50)</label>
-      <input type="checkbox" name="camera" id="camera" [(ngModel)]="camera" (ngModelChange)="calculate()"/><br/>
-      <label for="skisPoles">Skis / Poles (+$12)</label>
-      <input type="checkbox" name="skisPoles" id="skisPoles" [(ngModel)]="skisPoles" (ngModelChange)="calculate()"/><br/>
-      <label for="otherPropsAmt">Negotiated amt for any other props</label>
-      <input type="number" name="otherPropsAmt" id="otherPropsAmt" [(ngModel)]="otherPropsAmt" (ngModelChange)="calculate()"/><br/>
-  
-      <h4>Vehicle options</h4>
-      <label for="car">Automobile (+$37.50)</label>
-      <input type="checkbox" name="car" id="car" [(ngModel)]="car" (ngModelChange)="calculate()"/>
-      <div *ngIf="car === true">
-        <label for="mileage">Mileage</label>
-        <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
-        <label for="tolls">Tolls</label>
-        <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
-      </div><br/>
-      <label for="trailer">Trailer (+$19)</label>
-      <input type="checkbox" name="trailer" id="trailer" [(ngModel)]="trailer" (ngModelChange)="calculate()"/>
-      <div *ngIf="trailer === true">
-        <label for="mileage">Mileage</label>
-        <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
-        <label for="tolls">Tolls</label>
-        <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
-      </div><br/>
-      <label for="bicycle">Bicycle (+$12)</label>
-      <input type="checkbox" name="bicycle" id="bicycle" [(ngModel)]="bicycle" (ngModelChange)="calculate()"/><br/>
-      <label for="moped">Moped (+$15)</label>
-      <input type="checkbox" name="moped" id="moped" [(ngModel)]="moped" (ngModelChange)="calculate()"/>
-      <div *ngIf="moped === true">
-        <label for="mileage">Mileage</label>
-        <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
-        <label for="tolls">Tolls</label>
-        <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
-      </div><br/>
-      <label for="motorcycle">Motorcycle (+$37.50)</label>
-      <input type="checkbox" name="motorcycle" id="motorcycle" [(ngModel)]="motorcycle" (ngModelChange)="calculate()"/>
-      <div *ngIf="motorcycle === true">
-        <label for="mileage">Mileage</label>
-        <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
-        <label for="tolls">Tolls</label>
-        <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
-      </div><br/>
-      <label for="policeMoto">Police motorcycle (+$50)</label>
-      <input type="checkbox" name="policeMoto" id="policeMoto" [(ngModel)]="policeMoto" (ngModelChange)="calculate()"/>
-      <div *ngIf="policeMoto === true">
-        <label for="mileage">Mileage</label>
-        <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
-        <label for="tolls">Tolls</label>
-        <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
-      </div><br/>
-      <label for="skatesOrSkateboard">Skates / Skateboard (+5.50)</label>
-      <input type="checkbox" name="skatesOrSkateboard" id="skatesOrSkateboard" [(ngModel)]="skatesOrSkateboard" (ngModelChange)="calculate()"/><br/>
-      <h4>Other bumps</h4>
-      <label for="hazardPay">Negotiated $ amt for hazard pay</label>
-      <input type="number" name="hazardPay" id="hazardPay" [(ngModel)]="hazardPay" (ngModelChange)="calculate()"/><br/>
-      <label for="otherBumps">Negotiated $ amt for any other bumps</label>
-      <input type="number" name="otherBumps" id="otherBumps" [(ngModel)]="otherBumps" (ngModelChange)="calculate()"/><br/>
-  
-      <!-- <input type="submit" (click)="calculate()" value="Calculate pay"/> -->
+      <div class="form-flex-item">
+        <h3>Bumps</h3>
+        <h4>Wardrobe options</h4>
+        <label for="numWardrobe">Number of wardrobe changes requested: </label>
+        <input type="number" name="numWardrobe" id="numWardrobe" [(ngModel)]="numWardrobe" (ngModelChange)="calculate()"/><br/>
+        ($9 for first change, $6.50 for each additional change)<br/>
+        <label for="formalWear">Formal wear (+$18)</label>
+        <input type="checkbox" name="formalWear" id="formalWear" [(ngModel)]="formalWear" (ngModelChange)="calculate()"/><br/>
+        <label for="policeWear">Police outfit (+$36)</label>
+        <input type="checkbox" name="policeWear" id="policeWear" [(ngModel)]="policeWear" (ngModelChange)="calculate()"/><br/>
+        <h4>Props options</h4>
+        <label for="pet">Pet (+$23)</label>
+        <input type="checkbox" name="pet" id="pet" [(ngModel)]="pet" (ngModelChange)="calculate()"/><br/>
+        <label for="golfClubs">Golf clubs(+$12)</label>
+        <input type="checkbox" name="golfClubs" id="golfClubs" [(ngModel)]="golfClubs" (ngModelChange)="calculate()"/><br/>
+        <label for="tennisRacquet">Tennis racquet (+$5.50)</label>
+        <input type="checkbox" name="tennisRacquet" id="tennisRacquet" [(ngModel)]="tennisRacquet" (ngModelChange)="calculate()"/><br/>
+        <label for="luggage1">Luggage (first piece, +$5.50)</label>
+        <input type="checkbox" name="luggage1" id="luggage1" [(ngModel)]="luggage1" (ngModelChange)="calculate()"/><br/>
+        <div *ngIf="luggage1" >
+          <label for="luggage2">Luggage (second piece, +$5.50)</label>
+          <input type="checkbox" name="luggage2" id="luggage2" [(ngModel)]="luggage2" (ngModelChange)="calculate()"/><br/>
+        </div>
+        <label for="camera">Camera (+$5.50)</label>
+        <input type="checkbox" name="camera" id="camera" [(ngModel)]="camera" (ngModelChange)="calculate()"/><br/>
+        <label for="skisPoles">Skis / Poles (+$12)</label>
+        <input type="checkbox" name="skisPoles" id="skisPoles" [(ngModel)]="skisPoles" (ngModelChange)="calculate()"/><br/>
+        <label for="otherPropsAmt">Negotiated amt for any other props</label>
+        <input type="number" name="otherPropsAmt" id="otherPropsAmt" [(ngModel)]="otherPropsAmt" (ngModelChange)="calculate()"/><br/>
+        <h4>Vehicle options</h4>
+        <label for="car">Automobile (+$37.50)</label>
+        <input type="checkbox" name="car" id="car" [(ngModel)]="car" (ngModelChange)="calculate()"/>
+        <div *ngIf="car === true">
+          <label for="mileage">Mileage</label>
+          <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
+          <label for="tolls">Tolls</label>
+          <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
+        </div><br/>
+        <label for="trailer">Trailer (+$19)</label>
+        <input type="checkbox" name="trailer" id="trailer" [(ngModel)]="trailer" (ngModelChange)="calculate()"/>
+        <div *ngIf="trailer === true">
+          <label for="mileage">Mileage</label>
+          <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
+          <label for="tolls">Tolls</label>
+          <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
+        </div><br/>
+        <label for="bicycle">Bicycle (+$12)</label>
+        <input type="checkbox" name="bicycle" id="bicycle" [(ngModel)]="bicycle" (ngModelChange)="calculate()"/><br/>
+        <label for="moped">Moped (+$15)</label>
+        <input type="checkbox" name="moped" id="moped" [(ngModel)]="moped" (ngModelChange)="calculate()"/>
+        <div *ngIf="moped === true">
+          <label for="mileage">Mileage</label>
+          <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
+          <label for="tolls">Tolls</label>
+          <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
+        </div><br/>
+        <label for="motorcycle">Motorcycle (+$37.50)</label>
+        <input type="checkbox" name="motorcycle" id="motorcycle" [(ngModel)]="motorcycle" (ngModelChange)="calculate()"/>
+        <div *ngIf="motorcycle === true">
+          <label for="mileage">Mileage</label>
+          <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
+          <label for="tolls">Tolls</label>
+          <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
+        </div><br/>
+        <label for="policeMoto">Police motorcycle (+$50)</label>
+        <input type="checkbox" name="policeMoto" id="policeMoto" [(ngModel)]="policeMoto" (ngModelChange)="calculate()"/>
+        <div *ngIf="policeMoto === true">
+          <label for="mileage">Mileage</label>
+          <input type="number" name="mileage" id="mileage" [(ngModel)]="mileage" (ngModelChange)="calculate()"/><br/>
+          <label for="tolls">Tolls</label>
+          <input type="number" name="tolls" id="tolls" [(ngModel)]="tolls" (ngModelChange)="calculate()"/>
+        </div><br/>
+        <label for="skatesOrSkateboard">Skates / Skateboard (+5.50)</label>
+        <input type="checkbox" name="skatesOrSkateboard" id="skatesOrSkateboard" [(ngModel)]="skatesOrSkateboard" (ngModelChange)="calculate()"/><br/>
+        <h4>Other bumps</h4>
+        <label for="hazardPay">Negotiated $ amt for hazard pay</label>
+        <input type="number" name="hazardPay" id="hazardPay" [(ngModel)]="hazardPay" (ngModelChange)="calculate()"/><br/>
+        <label for="otherBumps">Negotiated $ amt for any other bumps</label>
+        <input type="number" name="otherBumps" id="otherBumps" [(ngModel)]="otherBumps" (ngModelChange)="calculate()"/><br/>
+      </div>
   
     </form>
     <h3 *ngIf="totalPay > 0">Total Earned: ${{totalPay | number : '1.2-2'}}</h3>
   </div>
   <div class="table-container">
+    <h2>Voucher Details Summary</h2>
     <div class="table-flex">
       <table>
         <thead>
@@ -145,27 +141,31 @@
         <tbody>
           <tr>
             <td>Generated Id#</td>
-            <td>{{id}}</td>
+            <td class="right">{{id}}</td>
           </tr>
           <tr>
             <td>Work Category</td>
-            <td>{{bgType}}</td>
+            <td class="right">{{bgType}}</td>
           </tr>
           <tr>
             <td>Wet Pay</td>
-            <td>{{wetPay}}</td>
+            <td class="right">{{wetPay}}</td>
           </tr>
           <tr>
             <td>Smoke Pay </td>
-            <td>{{smokePay}}</td>
+            <td class="right">{{smokePay}}</td>
           </tr>
           <tr>
             <td>Full beard or Body makeup </td>
-            <td>{{hmu}}</td>
+            <td class="right">{{hmu}}</td>
+          </tr>
+          <tr>
+            <td>Base Pay</td>
+            <td class="right">${{basePay}}</td>
           </tr>
           <tr>
             <td>Base rate</td>
-            <td>${{baseRate | number: '1.2-2'}}/hr</td>
+            <td class="right">${{baseRate | number: '1.2-2'}}/hr</td>
           </tr>
         </tbody>
       </table>
@@ -173,40 +173,55 @@
         <tbody>
           <tr>
             <td>Clock-in time</td>
-            <td>{{startTime}}</td>
-            <td>OT1 triggers at</td>
-            <td>{{ot1TriggerTimeNum}}</td>
+            <td class="right">{{startTime}}</td>
           </tr>
           <tr>
             <td>Clock-out time</td>
-            <td>{{endTime}}</td>
-            <td>OT2 triggers at</td>
-            <td>{{ot2TriggerTimeNum}}</td>
+            <td class="right">{{endTime}}</td>
           </tr>
           <tr>
             <td>Lunch start time</td>
-            <td>{{lunchStart}}</td>
-
+            <td class="right">{{lunchStart}}</td>
           </tr>
           <tr>
             <td>Lunch end time</td>
-            <td>{{lunchEnd}}</td>
-            <td>Total Hrs called</td>
-            <td>{{totalHrs | number: '1.1-1'}}</td>
+            <td class="right">{{lunchEnd}}</td>
           </tr>
           <tr>
             <td>Dinner start time</td>
-            <td>{{dinnerStart}}</td>
-            <td>Golden hours</td>
-            <td>{{goldenPay / goldenRate}}</td>
+            <td class="right">{{dinnerStart}}</td>
           </tr>
           <tr>
             <td>Dinner end time</td>
-            <td>{{dinnerEnd}}</td>
-            <td>Golden Pay</td>
-            <td>${{goldenPay | number: '1.2-2'}}</td>
+            <td class="right">{{dinnerEnd}}</td>
           </tr>
         </tbody>
+      </table>
+      <table>
+        <tr>
+          <td>OT1 triggers at</td>
+          <td class="right">{{ot1TriggerTimeNum}}</td>
+        </tr>
+        <tr>
+          <td>OT2 triggers at</td>
+          <td class="right">{{ot2TriggerTimeNum}}</td>
+        </tr>
+        <tr>
+          <td>Total Hrs called</td>
+          <td class="right">{{totalHrs | number: '1.1-1'}}</td>
+        </tr>
+        <tr>
+          <td>Golden hours</td>
+          <td class="right">{{goldenPay / goldenRate}}</td>
+        </tr>
+        <tr>
+          <td>"Golden time" bonus (after 16 total hrs)</td>
+          <td class="right">${{goldenRate | number: '1.2-2'}}/hr </td>
+        </tr>
+        <tr>
+          <td>Golden Pay</td>
+          <td class="right">${{goldenPay | number: '1.2-2'}}</td>
+        </tr>
       </table>
     </div>
     <div class="table-flex">
@@ -214,19 +229,19 @@
         <tbody>
           <tr>
             <td>Lunch penalties</td>
-            <td>{{lunchPenalties}}</td>
+            <td class="right">{{lunchPenalties}}</td>
           </tr>
           <tr>
             <td>Lunch penalty amount</td>
-            <td>${{lunchPenaltiesAmt | number: '1.2-2'}}</td>
+            <td class="right">${{lunchPenaltiesAmt | number: '1.2-2'}}</td>
           </tr>
           <tr>
             <td>Dinner penalties</td>
-            <td>{{dinnerPenalties}}</td>
+            <td class="right">{{dinnerPenalties}}</td>
           </tr>
           <tr>
             <td>Dinner penalty amount</td>
-            <td>${{dinnerPenaltiesAmt | number: '1.2-2'}}</td>
+            <td class="right">${{dinnerPenaltiesAmt | number: '1.2-2'}}</td>
           </tr>
         </tbody>
       </table>
@@ -234,159 +249,171 @@
         <tbody>
           <tr>
             <td>total # of hours worked</td>
-            <td>{{hrsWorked | number: '1.1-1'}}</td>
+            <td class="right">{{hrsWorked | number: '1.1-1'}}</td>
           </tr>
           <tr>
             <td># of overtime hours</td>
-            <td>{{overtimeHrs | number: '1.1-1'}}</td>
+            <td class="right">{{overtimeHrs | number: '1.1-1'}}</td>
+          </tr>
+          <tr style="height: 0.5em"></tr>
+          <tr>
+            <td># of OT1 hrs</td>
+            <td class="right">{{ot1Hrs | number: '1.1-1'}}</td>
           </tr>
           <tr>
             <td>OT1 rate (hrs 8-10)</td>
-            <td>${{overtimeRate1 | number: '1.2-2'}}/hr</td>
-          </tr>
-          <tr>
-            <td># of OT1 hrs</td>
-            <td>{{ot1Hrs | number: '1.1-1'}}</td>
+            <td class="right">${{overtimeRate1 | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
             <td>OT1 pay</td>
-            <td>${{ot1Pay | number: '1.2-2'}}</td>
+            <td class="right">${{ot1Pay | number: '1.2-2'}}</td>
+          </tr>
+          <tr style="height: 0.5em"></tr>
+          <tr>
+            <td># of OT2 hrs</td>
+            <td class="right">{{ot2Hrs | number: '1.1-1'}}</td>
           </tr>
           <tr>
             <td>OT2 rate (hrs 10+)</td>
-            <td>${{overtimeRate2 | number: '1.2-2'}}/hr</td>
-          </tr>
-          <tr>
-            <td># of OT2 hrs</td>
-            <td>{{ot2Hrs | number: '1.1-1'}}</td>
+            <td class="right">${{overtimeRate2 | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
             <td>OT2 pay</td>
-            <td>${{ot2Pay | number: '1.2-2'}}</td>
+            <td class="right">${{ot2Pay | number: '1.2-2'}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Total overtime pay</td>
-            <td>${{overtimePay | number: '1.2-2'}}</td>
+            <td class="right">${{overtimePay | number: '1.2-2'}}</td>
           </tr>
-          <tr>
-            <td>"Golden time" bonus (after 16 total hrs)</td>
-            <td>${{goldenRate | number: '1.2-2'}}/hr </td>
-          </tr>
+
         </tbody>
       </table>
     </div>
     <div class="table-flex">
       <table>
         <tbody>
-          <th>Night Premium 1 values</th>
+          <th colspan="2">Night Premium 1 values</th>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Night premium 1 triggered?</td>
-            <td>{{night1Trigger}}</td>
+            <td class="right">{{night1Trigger}}</td>
           </tr>
           <tr>
             <td>Work hr number @ 8pm</td>
-            <td>{{hoursWorkedAt8pm | number: '1.1-1'}}</td>
+            <td class="right">{{hoursWorkedAt8pm | number: '1.1-1'}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Total N1 hrs</td>
-            <td>{{totalNight1Hrs | number: '1.1-1'}}</td>
+            <td class="right">{{totalNight1Hrs | number: '1.1-1'}}</td>
+          </tr>
+          <tr style="height: 0.5em"></tr>
+          <tr>
+            <td>N1 hrs during base rate</td>
+            <td class="right">{{baseN1Hrs | number: '1.1-1'}} hrs</td>
           </tr>
           <tr>
-            <td>N1 hrs @ base rate</td>
-            <td>{{baseN1Hrs | number: '1.1-1'}} hrs</td>
+            <td>Base N1 rate (Base x 10%)</td>
+            <td class="right">${{baseN1Rate | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
-            <td>baseN1 rate</td>
-            <td>${{baseN1Rate | number: '1.2-2'}}/hr</td>
+            <td>Amt earned @ Base N1 rate</td>
+            <td class="right">${{baseN1Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr style="height: 0.5em"></tr>
+          <tr>
+            <td>N1 hrs during OT1</td>
+            <td class="right">{{ot1N1Hrs | number: '1.1-1'}} hrs</td>
           </tr>
           <tr>
-            <td>Amt of N1 earned @ base rate</td>
-            <td>${{baseN1Amt | number: '1.2-2'}}</td>
+            <td>OT1 N1 rate</td>
+            <td class="right">${{ot1N1Rate | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
-            <td>N1 hrs @ OT1 rate</td>
-            <td>{{ot1N1Hrs | number: '1.1-1'}} hrs</td>
+            <td>Amt earned @ OT1 N1 rate</td>
+            <td class="right">${{ot1N1Amt | number: '1.2-2'}}</td>
+          </tr>
+          <tr style="height: 0.5em"></tr>
+          <tr>
+            <td>N1 hrs during OT2</td>
+            <td class="right">{{ot2N1Hrs | number: '1.1-1'}} hrs</td>
           </tr>
           <tr>
-            <td>ot1N1 rate</td>
-            <td>${{ot1N1Rate | number: '1.2-2'}}/hr</td>
+            <td>OT2 N1 rate</td>
+            <td class="right">${{ot2N1Rate | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
-            <td>Amt of N1 earned @ OT1 rate</td>
-            <td>${{ot1N1Amt | number: '1.2-2'}}</td>
+            <td>Amt earned @ OT2 N1 rate</td>
+            <td class="right">${{ot2N1Amt | number: '1.2-2'}}</td>
           </tr>
-          <tr>
-            <td>N1 hrs @ OT2 rate</td>
-            <td>{{ot2N1Hrs | number: '1.1-1'}} hrs</td>
-          </tr>
-          <tr>
-            <td>ot2N1 rate</td>
-            <td>${{ot2N1Rate | number: '1.2-2'}}/hr</td>
-          </tr>
-          <tr>
-            <td>Amt of N1 earned @ OT2 rate</td>
-            <td>${{ot2N1Amt | number: '1.2-2'}}</td>
-          </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Total from night premium 1</td>
-            <td>${{totalNight1Amt | number: '1.2-2'}}</td>
+            <td class="right">${{totalNight1Amt | number: '1.2-2'}}</td>
           </tr>
         </tbody>
       </table>
       <table>
         <tbody>
-          <th>Night Premium 2 values</th>
+          <th colspan="2">Night Premium 2 values</th>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Night premium 2 triggered?</td>
-            <td>{{night2Trigger}}</td>
+            <td class="right">{{night2Trigger}}</td>
           </tr>
           <tr>
             <td>Work hr number @ 1am</td>
-            <td>{{hoursWorkedAt1am}}</td>
+            <td class="right">{{hoursWorkedAt1am}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Total N2 hrs</td>
-            <td>{{totalNight2Hrs | number: '1.1-1'}}</td>
+            <td class="right">{{totalNight2Hrs | number: '1.1-1'}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>N2 hrs @ base rate</td>
-            <td>{{baseN2Hrs | number: '1.1-1'}} hrs</td>
+            <td class="right">{{baseN2Hrs | number: '1.1-1'}} hrs</td>
           </tr>
           <tr>
             <td>baseN2 rate</td>
-            <td>${{baseN2Rate | number: '1.2-2'}}/hr</td>
+            <td class="right">${{baseN2Rate | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
             <td>Amt of N2 earned @ base rate</td>
-            <td>${{baseN2Amt | number: '1.2-2'}}</td>
+            <td class="right">${{baseN2Amt | number: '1.2-2'}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>N2 hrs @ OT1 rate</td>
-            <td>{{ot1N2Hrs | number: '1.1-1'}} hrs</td>
+            <td class="right">{{ot1N2Hrs | number: '1.1-1'}} hrs</td>
           </tr>
           <tr>
             <td>ot1N2 rate</td>
-            <td>${{ot1N2Rate | number: '1.2-2'}}/hr</td>
+            <td class="right">${{ot1N2Rate | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
             <td>Amt of N2 earned @ OT1 rate</td>
-            <td>${{ot1N2Amt | number: '1.2-2'}}</td>
+            <td class="right">${{ot1N2Amt | number: '1.2-2'}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>N2 hrs @ OT2 rate</td>
-            <td>{{ot2N2Hrs | number: '1.1-1'}} hrs</td>
+            <td class="right">{{ot2N2Hrs | number: '1.1-1'}} hrs</td>
           </tr>
           <tr>
             <td>ot2N2 rate</td>
-            <td>${{ot2N2Rate | number: '1.2-2'}}/hr</td>
+            <td class="right">${{ot2N2Rate | number: '1.2-2'}}/hr</td>
           </tr>
           <tr>
             <td>Amt of N2 earned @ OT2 rate</td>
-            <td>${{ot2N2Amt | number: '1.2-2'}}</td>
+            <td class="right">${{ot2N2Amt | number: '1.2-2'}}</td>
           </tr>
+          <tr style="height: 0.5em"></tr>
           <tr>
             <td>Total from night premium 2</td>
-            <td>${{totalNight2Amt | number: '1.2-2'}}</td>
+            <td class="right">${{totalNight2Amt | number: '1.2-2'}}</td>
           </tr>
         </tbody>
       </table>
@@ -395,7 +422,7 @@
       <tbody>
         <tr>
           <td>Total from night premiums</td>
-          <td>${{totalNightPremiumsAmt | number: '1.2-2'}}</td>
+          <td class="right">${{totalNightPremiumsAmt | number: '1.2-2'}}</td>
         </tr>
       </tbody>
     </table>
@@ -403,31 +430,35 @@
       <tbody>
         <tr>
           <td>Base pay (8 hrs at base rate)</td>
-          <td>${{basePay | number: '1.2-2'}}</td>
+          <td class="right">${{basePay | number: '1.2-2'}}</td>
         </tr>
+        <tr style="height: 0.5em"></tr>
         <tr>
           <td>Total wages (adjusted base pay, OT, + night premiums)</td>
-          <td>${{totalWages | number: '1.2-2'}}</td>
+          <td class="right">${{totalWages | number: '1.2-2'}}</td>
         </tr>
         <tr>
           <td>Total bumps</td>
-          <td>${{totalBumps | number: '1.2-2'}}</td>
+          <td class="right">${{totalBumps | number: '1.2-2'}}</td>
         </tr>
         <tr>
           <td>Total meal penalties</td>
-          <td>${{totalPenalties | number: '1.2-2'}}</td>
+          <td class="right">${{totalPenalties | number: '1.2-2'}}</td>
         </tr>
         <tr>
           <td>"Golden time" pay</td>
-          <td>${{goldenPay | number: '1.2-2'}}</td>
+          <td class="right">${{goldenPay | number: '1.2-2'}}</td>
         </tr>
-        <tr>
-          <td>Total pay (Total wages + bumps/penalties) </td>
-          <td>${{totalPay | number: '1.2-2'}}</td>
+        <tr style="height: 0.5em"></tr>
+        <tr class="grand-total">
+          <td>Grand Total</td>
+          <td class="right">${{totalPay | number: '1.2-2'}}</td>
         </tr>
       </tbody>
     </table>
-    <button (click)="clearForm()">Clear Form</button>
-    <button (click)="handleSubmit()" >{{buttonLabel}}</button>
   </div>
+</div>
+<div class="btn-wrapper">
+  <button (click)="clearForm()" class="clear-btn">Clear Form</button>
+  <button (click)="handleSubmit()" class="submit-btn">{{buttonLabel}}</button>
 </div>
