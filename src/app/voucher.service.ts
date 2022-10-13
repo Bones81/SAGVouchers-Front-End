@@ -12,7 +12,7 @@ import { Voucher } from './voucher';
 export class VoucherService {
 
   // url now updated to be deployed render.com back end
-  private vouchersUrl = 'https://sag-vouchers-back-end.onrender.com'
+  private vouchersUrl = 'https://sag-vouchers-back-end.onrender.com/vouchers'
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
