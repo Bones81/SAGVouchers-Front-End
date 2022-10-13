@@ -11,7 +11,7 @@ import { Voucher } from './voucher';
 })
 export class VoucherService {
 
-  // url now updated to be deployed heroku back end
+  // url now updated to be deployed render.com back end
   private vouchersUrl = 'https://sag-vouchers-back-end.onrender.com'
 
   httpOptions = {
