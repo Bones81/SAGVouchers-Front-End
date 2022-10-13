@@ -394,7 +394,7 @@ export class FormComponent implements OnInit {
   }
 
   redirect(): void {
-    window.location.replace('https://sag-vouchers.netlify.com/')
+    window.location.replace('https://bones81.github.io/SAGVouchers-Front-End/')
   }
 
   calcBaseRate(): void {
