@@ -12,7 +12,7 @@ import { Voucher } from './voucher';
 export class VoucherService {
 
   // url now updated to be deployed heroku back end
-  private vouchersUrl = 'https://sag-voucher-back-end.herokuapp.com/vouchers'
+  private vouchersUrl = 'https://sag-vouchers-back-end.onrender.com'
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
