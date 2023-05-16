@@ -2,7 +2,7 @@
 Angular front end for SAG Vouchers app
 
 ## Link to live site
-[https://sag-voucher-front-end.herokuapp.com/](https://bones81.github.io/SAGVouchers-Front-End/)
+[https://bones81.github.io/SAGVouchers-Front-End/](https://bones81.github.io/SAGVouchers-Front-End/)
 
 ## Link to back end repo
 https://github.com/Bones81/SAGVouchers-Back-End
